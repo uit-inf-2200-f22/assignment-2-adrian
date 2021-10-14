@@ -17,12 +17,7 @@ def fromSignedWordToUnsignedWord(num):
     # Convert signed 32 bit (using 2's complement) to unsigned value
     # This is simply done by removing trailing sign bits, and replacing
     # them with zeros. Since a 32 bit integer is not represented using
-    # 32 bits in python, this automatically renders the value "unsigned".
-
-    word = list(bin(tmp)[2:])
-    word[0] = '0'
-
-
+    # 32 bits in python, this automatically renders the value "unsigned"
     return num & 0xffffffff
 
 
