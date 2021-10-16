@@ -29,7 +29,27 @@ class Memory(CPUElement):
         
         # Remove this and replace with your implementation!
         # Implementation MUST populate the dictionary in self.memory!
-        raise AssertionError("initializeMemory not implemented in class Memory!")
+
+        # mem er nå en liste som inneholder 1 linje per element i listen
+        mem = open("filename", "r").readlines()
+
+        address = []
+        instruction = []
+
+        # Loops through each line in the mem lists, adds every word, separated by a tab, into a new list
+        # which is then added to its respective list.
+        for line in mem:
+            if line[0] == '#':
+                continue
+            parse = line.split("\t")
+            address.append(int(parse|[0], 16))
+            instruction.append(int(parse[1], 16))
+
+        i = 0
+        while i < len(address):
+            self.memory.pop(int(address[i]), int(instruction[i]))
+            i += 1
+
         
     def printAll(self):
         for key in sorted(self.memory.keys()):
