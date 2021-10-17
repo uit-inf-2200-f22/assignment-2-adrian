@@ -15,8 +15,12 @@ class DataMemory(Memory):
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
         
-        # Remove this and replace with your implementation!
-        raise AssertionError("connect not implemented in class DataMemory!")
+        assert(len(inputSources) == 2), 'DataMemory should only have 2 input source'
+        assert(len(outputValueNames) == 1), 'DataMemory should only have 1 output'
+        assert(len(control) == 2), 'DataMemory has 2 control signal intakes'
+        assert(len(outputSignalNames) == 0), 'DataMemory has no control signal output'
+
+        self.memory = super.memory
     
     def writeOutput(self):
         # Remove this and replace with your implementation!

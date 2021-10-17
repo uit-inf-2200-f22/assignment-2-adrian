@@ -31,7 +31,7 @@ class Memory(CPUElement):
         # Implementation MUST populate the dictionary in self.memory!
 
         # mem er nå en liste som inneholder 1 linje per element i listen
-        mem = open("filename", "r").readlines()
+        mem = open(filename, "r").readlines()
 
         address = []
         instruction = []
@@ -42,7 +42,7 @@ class Memory(CPUElement):
             if line[0] == '#':
                 continue
             parse = line.split("\t")
-            address.append(int(parse|[0], 16))
+            address.append(int(parse[0], 16))
             instruction.append(int(parse[1], 16))
 
         i = 0

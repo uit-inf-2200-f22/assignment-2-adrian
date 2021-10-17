@@ -14,9 +14,15 @@ class InstructionMemory(Memory):
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
         
-        # Remove this and replace with your implementation!
-        raise AssertionError("connect not implemented in class InstructionMemory!")
+        assert (len(inputSources) == 1), 'Instruction memory should only have 1 input'
+        assert (len(outputValueNames) == 1), 'Instruction memory should only have 1 output'
+        assert(len(control) == 0), 'Instruction memory should not have control input'
+        assert (len(outputSignalNames) == 0), 'Instruction memory should not have any control outputs'
+
+        self.memory = super.memory
     
     def writeOutput(self):
-        # Remove this and replace with your implementation!
-        raise AssertionError("writeOutput not implemented in class InstructionMemory!")
+        
+
+
+        return 1

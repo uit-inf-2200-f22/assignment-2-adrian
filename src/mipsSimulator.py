@@ -10,6 +10,7 @@ from instructionMemory import InstructionMemory
 from dataMemory import DataMemory
 from constant import Constant
 from randomControl import RandomControl
+from alu import Alu
 
 
 class MIPSSimulator():
@@ -33,6 +34,7 @@ class MIPSSimulator():
         self.mux = Mux()
         self.adder = Add()
         self.pc = PC(self.startAddress())
+        self.alu = Alu()
 
         self.elements = [self.constant3, self.constant4,
                          self.randomControl, self.adder, self.mux]
@@ -81,7 +83,20 @@ class MIPSSimulator():
             [],
             []
         )
+        
+        self.dataMemory.connect(
+            [(self.pc, 'pcAddress')],
+            [],
+            [],
+            []
+        )
 
+        self.instructionMemory.connect(
+            [],
+            [],
+            [],
+            []
+        )
     def startAddress(self):
         '''
         Returns first instruction from instruction memory
