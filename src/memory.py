@@ -26,9 +26,6 @@ class Memory(CPUElement):
         Helper function that reads initializes the data memory by reading input
         data from a file.
         '''
-        
-        # Remove this and replace with your implementation!
-        # Implementation MUST populate the dictionary in self.memory!
 
         # mem er nå en liste som inneholder 1 linje per element i listen
         mem = open(filename, "r").readlines()

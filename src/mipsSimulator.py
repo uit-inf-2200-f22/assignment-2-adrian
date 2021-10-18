@@ -85,7 +85,7 @@ class MIPSSimulator():
         )
         
         self.dataMemory.connect(
-            [(self.pc, 'pcAddress')],
+            [(self.pc, 'pcAddress'), (self.alu, 'aluResult')],
             [],
             [],
             []
@@ -97,6 +97,14 @@ class MIPSSimulator():
             [],
             []
         )
+
+        self.alu.connect(
+            [],
+            [],
+            [],
+            []
+        )
+
     def startAddress(self):
         '''
         Returns first instruction from instruction memory

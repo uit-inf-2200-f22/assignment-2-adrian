@@ -23,6 +23,6 @@ class InstructionMemory(Memory):
     
     def writeOutput(self):
         
-
+        self.outputValues
 
         return 1
