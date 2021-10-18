@@ -3,8 +3,9 @@ Implements CPU element for Instruction Memory in MEM stage.
 
 Code written for inf-2200, University of Tromso
 '''
-
+import unittest
 from cpuElement import CPUElement
+from testElement import TestElement
 from memory import Memory
 
 class InstructionMemory(Memory):
@@ -20,9 +21,53 @@ class InstructionMemory(Memory):
         assert (len(outputSignalNames) == 0), 'Instruction memory should not have any control outputs'
 
         self.inputName = inputSources[0][1]
-        self.outputName = outputSignalNames[0]
-        self.memory = super.memory
+        self.outputName = outputValueNames[0]
+        self.memory = self.memory
     
     def writeOutput(self):
         
         self.outputValues[self.outputName] = self.inputValues[self.inputName]   # Med antalgelse at instructionMemory.readInput() blir kjørt før dette, kan outputValues dictionariet få en key self.inputname, med verdi som ligger mappet til self.inputName i self.inputValues.
+
+
+class testInstructionMemory(unittest.TestCase):
+    def setUp(self, memoryFile):
+        self.instructionMem = InstructionMemory(memoryFile)
+        self.testInput = TestElement()
+        self.testOutput = TestElement()
+
+        self.testInput.connect(
+            [],
+            ['address'],
+            [],
+            []
+        )
+        self.instructionMem.connect(
+            [(self.testInput, 'address')],
+            ['instruction'],
+            [],
+            []
+        )
+        self.testOutput.connect(
+            [(self.instructionMem, 'instruction')],
+            [],
+            [],
+            []
+        )
+
+    def test_correct_behaviour(self):
+
+        self.testInput.setOutputValue('address', 1918171615)
+
+        self.instructionMem.readInput()
+        self.instructionMem.writeOutput()
+        self.testOutput.readInput()
+        output = self.testOutput.inputValues['instruction']
+
+        self.assertEqual(output, 1918171615)
+
+        # bare for en kjapp print confirmation
+        if output == 1918171615:
+            print("success!")
+            return 0
+        
+        

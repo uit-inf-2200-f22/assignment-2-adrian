@@ -16,11 +16,11 @@ class DataMemory(Memory):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
         
         assert(len(inputSources) == 2), 'Datamemory should have 2 inputs'
-        assert(len(outputValueNames) == 1), 'Datamemory has only one input'
-        assert(len(control) == 2), 'Datamemory should have 2 control signals'
+        assert(len(outputValueNames) == 1), 'Datamemory has only one output'
+        assert(len(control) == 2), 'Datamemory should have 2 control signal inputs'
         assert(len(outputSignalNames) == 0), 'Datamemory should not have any control output'
 
-        self.memory = super.memory
+        self.memory =self.memory
         
     def writeOutput(self):
         # Remove this and replace with your implementation!

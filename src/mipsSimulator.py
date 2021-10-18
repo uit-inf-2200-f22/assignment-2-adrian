@@ -6,7 +6,7 @@ from pc import PC
 from add import Add
 from mux import Mux
 from registerFile import RegisterFile
-from instructionMemory import InstructionMemory
+from instructionMemory import InstructionMemory, testInstructionMemory
 from dataMemory import DataMemory
 from constant import Constant
 from randomControl import RandomControl
@@ -33,13 +33,20 @@ class MIPSSimulator():
         self.randomControl = RandomControl()
         self.mux = Mux()
         self.adder = Add()
-        self.pc = PC(self.startAddress())
+        self.pc = PC(PC(self.startAddress))       # Replace with PC(random number) if you want to test
         self.alu = Alu()
 
         self.elements = [self.constant3, self.constant4,
                          self.randomControl, self.adder, self.mux]
 
         self._connectCPUElements()
+
+        # Instruction memory has been successfully tested!
+        # Though there are probably better ways of doing this than here, perhaps make a file that just excecutes the test needed files
+        # self.testIM = testInstructionMemory()
+
+        # self.testIM.setUp(memoryFile)
+        # self.testIM.test_correct_behaviour()
 
     def _connectCPUElements(self):
         self.constant3.connect(
@@ -86,24 +93,24 @@ class MIPSSimulator():
         
         self.dataMemory.connect(
             [(self.pc, 'pcAddress'), (self.alu, 'aluResult')],
-            [],
-            [],
+            ['memoryData'],
+            [(self.randomControl, 'memRead'), (self.randomControl, 'memWrite')],
             []
         )
 
         self.instructionMemory.connect(
-            [],
-            [],
+            [(self.pc, 'address')],
+            ['instruction'],
             [],
             []
         )
 
-        self.alu.connect(
-            [],
-            [],
-            [],
-            []
-        )
+        # self.alu.connect(
+        #     [],
+        #     [],
+        #     [],
+        #     []
+        # )
 
     def startAddress(self):
         '''
@@ -141,12 +148,12 @@ class MIPSSimulator():
 
         # The following is just a small sample implementation
 
-        self.pc.writeOutput()
+        # self.pc.writeOutput()
 
-        for elem in self.elements:
-            elem.readControlSignals()
-            elem.readInput()
-            elem.writeOutput()
-            elem.setControlSignals()
+        # for elem in self.elements:
+        #     elem.readControlSignals()
+        #     elem.readInput()
+        #     elem.writeOutput()
+        #     elem.setControlSignals()
 
-        self.pc.readInput()
+        # self.pc.readInput()
