@@ -16,4 +16,4 @@ if __name__ == '__main__':
     memoryFile = sys.argv[1]
     
     simulator = MIPSSimulator(memoryFile)
-    runSimulator(simulator)
+    runSimulator(simulator) 

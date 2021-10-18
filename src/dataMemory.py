@@ -15,13 +15,13 @@ class DataMemory(Memory):
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
         
-        assert(len(inputSources) == 2), 'DataMemory should only have 2 input source'
-        assert(len(outputValueNames) == 1), 'DataMemory should only have 1 output'
-        assert(len(control) == 2), 'DataMemory has 2 control signal intakes'
-        assert(len(outputSignalNames) == 0), 'DataMemory has no control signal output'
+        assert(len(inputSources) == 2), 'Datamemory should have 2 inputs'
+        assert(len(outputValueNames) == 1), 'Datamemory has only one input'
+        assert(len(control) == 2), 'Datamemory should have 2 control signals'
+        assert(len(outputSignalNames) == 0), 'Datamemory should not have any control output'
 
         self.memory = super.memory
-    
+        
     def writeOutput(self):
         # Remove this and replace with your implementation!
         raise AssertionError("writeOutput not implemented in class DataMemory!")

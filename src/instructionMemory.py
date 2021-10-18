@@ -19,10 +19,10 @@ class InstructionMemory(Memory):
         assert(len(control) == 0), 'Instruction memory should not have control input'
         assert (len(outputSignalNames) == 0), 'Instruction memory should not have any control outputs'
 
+        self.inputName = inputSources[0][1]
+        self.outputName = outputSignalNames[0]
         self.memory = super.memory
     
     def writeOutput(self):
         
-        self.outputValues
-
-        return 1
+        self.outputValues[self.outputName] = self.inputValues[self.inputName]   # Med antalgelse at instructionMemory.readInput() blir kjørt før dette, kan outputValues dictionariet få en key self.inputname, med verdi som ligger mappet til self.inputName i self.inputValues.

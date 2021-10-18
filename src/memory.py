@@ -27,7 +27,8 @@ class Memory(CPUElement):
         data from a file.
         '''
 
-        # mem er nå en liste som inneholder 1 linje per element i listen
+        # Thanks to Daniel Ursin for pointing me in the right direction on this one.
+        # Mem is now a list with each line being an element in the list
         mem = open(filename, "r").readlines()
 
         address = []
@@ -38,16 +39,16 @@ class Memory(CPUElement):
         for line in mem:
             if line[0] == '#':
                 continue
-            parse = line.split("\t")
-            address.append(int(parse[0], 16))
-            instruction.append(int(parse[1], 16))
+            line = line.split("\t")
+            address.append(int(line[0], 16))
+            instruction.append(int(line[1], 16))
 
+        # Populating the self.memory dictionary
         i = 0
         while i < len(address):
             self.memory.pop(int(address[i]), int(instruction[i]))
             i += 1
 
-        
     def printAll(self):
         for key in sorted(self.memory.keys()):
             print("%s\t=> %s\t(%s)" % (hex(int(key)), common.fromUnsignedWordToSignedWord(self.memory[key]), hex(int(self.memory[key]))))
