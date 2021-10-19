@@ -29,7 +29,7 @@ class InstructionMemory(Memory):
         self.outputValues[self.outputName] = self.inputValues[self.inputName]   # Med antalgelse at instructionMemory.readInput() blir kjørt før dette, kan outputValues dictionariet få en key self.inputname, med verdi som ligger mappet til self.inputName i self.inputValues.
 
 
-class testInstructionMemory(unittest.TestCase):
+class TestInstructionMemory(unittest.TestCase):
     def setUp(self, memoryFile):
         self.instructionMem = InstructionMemory(memoryFile)
         self.testInput = TestElement()

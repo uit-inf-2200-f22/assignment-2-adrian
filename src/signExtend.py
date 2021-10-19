@@ -62,7 +62,7 @@ class SignExtend(CPUElement):
 
 
 
-class testSignExtend(unittest.TestCase):
+class TestSignExtend(unittest.TestCase):
     def setUp(self):
         self.signExtend = SignExtend()
         self.testInput = TestElement()

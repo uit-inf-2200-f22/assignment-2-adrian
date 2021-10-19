@@ -6,12 +6,13 @@ from pc import PC
 from add import Add
 from mux import Mux
 from registerFile import RegisterFile
-from instructionMemory import InstructionMemory, testInstructionMemory
+from instructionMemory import InstructionMemory, TestInstructionMemory
 from dataMemory import DataMemory
 from constant import Constant
 from randomControl import RandomControl
 from alu import Alu
-from signExtend import SignExtend, testSignExtend
+from aluControl import AluControl, TestAluControl
+from signExtend import SignExtend, TestSignExtend
 
 class MIPSSimulator():
     '''Main class for MIPS pipeline simulator.
@@ -42,16 +43,21 @@ class MIPSSimulator():
 
         self._connectCPUElements()
 
-        # Instruction memory has been successfully tested!
-        # Though there are probably better ways of doing this than here, perhaps make a file that just excecutes the test needed files
-        # self.testIM = testInstructionMemory()
-
+        '''INSTRUCTION MEMORY TEST'''
+        # self.testIM = TestInstructionMemory()
         # self.testIM.setUp(memoryFile)
-        # self.testIM.test_correct_behaviour()
+        # self.testIM.test_correct_behavior()
 
-        self.testSignExtend = testSignExtend()
-        self.testSignExtend.setUp()
-        self.testSignExtend.test_correct_behavior()
+        '''SIGN EXTEND TEST'''
+        # self.testSignExtend = TestSignExtend()
+        # self.testSignExtend.setUp()
+        # self.testSignExtend.test_correct_behavior()
+
+        '''ALUCONTROL TEST'''
+        self.testAluControl = TestAluControl()
+        self.testAluControl.setUp()        
+        self.testAluControl.test_correct_behavior()
+
 
     def _connectCPUElements(self):
         self.constant3.connect(
@@ -154,8 +160,6 @@ class MIPSSimulator():
         # The following is just a small sample implementation
 
         # self.pc.writeOutput()
-
-        self.testSignExtend.test_correct_behavior()
 
         # for elem in self.elements:
         #     elem.readControlSignals()

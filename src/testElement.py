@@ -21,10 +21,8 @@ class TestElement(CPUElement):
             self.sources.append(src)
         
         self.controlNames = []
-        self.controlSources = []
         for src, name in control:
             self.controlNames.append(name)
-            self.controlSources.append(src)
         
     def setOutputValue(self, name, value):
         self.outputValues[name] = value
