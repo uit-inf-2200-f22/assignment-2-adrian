@@ -7,7 +7,7 @@ import unittest
 from cpuElement import CPUElement
 from testElement import TestElement
 from memory import Memory
-
+from pc import PC
 class InstructionMemory(Memory):
     def __init__(self, filename):
         Memory.__init__(self, filename)

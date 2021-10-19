@@ -11,7 +11,7 @@ from dataMemory import DataMemory
 from constant import Constant
 from randomControl import RandomControl
 from alu import Alu
-
+from signExtend import SignExtend, testSignExtend
 
 class MIPSSimulator():
     '''Main class for MIPS pipeline simulator.
@@ -33,8 +33,9 @@ class MIPSSimulator():
         self.randomControl = RandomControl()
         self.mux = Mux()
         self.adder = Add()
-        self.pc = PC(PC(self.startAddress))       # Replace with PC(random number) if you want to test
+        self.pc = PC(101)#PC(PC(self.startAddress))       # Replace with PC(random number) if you want to test
         self.alu = Alu()
+
 
         self.elements = [self.constant3, self.constant4,
                          self.randomControl, self.adder, self.mux]
@@ -47,6 +48,10 @@ class MIPSSimulator():
 
         # self.testIM.setUp(memoryFile)
         # self.testIM.test_correct_behaviour()
+
+        self.testSignExtend = testSignExtend()
+        self.testSignExtend.setUp()
+        self.testSignExtend.test_correct_behavior()
 
     def _connectCPUElements(self):
         self.constant3.connect(
@@ -149,6 +154,8 @@ class MIPSSimulator():
         # The following is just a small sample implementation
 
         # self.pc.writeOutput()
+
+        self.testSignExtend.test_correct_behavior()
 
         # for elem in self.elements:
         #     elem.readControlSignals()

@@ -24,7 +24,7 @@ class Mux(CPUElement):
         self.inputZero = inputSources[0][1]         # Lager to inputs som inneholder navnet til inputene, her: input zero
         self.inputOne = inputSources[1][1]          # her lages navnet til input nummer 2
         self.outputName = outputValueNames[0]       # OutputValueNames er bare en string, som har navnet til outputet
-        self.controlName = control[0][1]            # Henter verdi nummer 2 fra første element i dictionary?
+        self.controlName = control[0][1]            # Henter verdi nummer 2 fra første element i dictionary, altså navnet til control signalet
 
     def writeOutput(self):
         muxControl = self.controlSignals[self.controlName]
