@@ -30,26 +30,35 @@ class SignExtend(CPUElement):
         print("input binary string", binStr)
         print("16 bit that should be extended:    ", binStr[16:32])
         i = 0
-        newString = ""
+        newString = "0b"
         if binStr[16] == "1":
-            newNum = int(binStr[16:32], 2)
-            # the binary string in this case is 00100011100011001111111111111111
-            # and what should be extended is 1111111111111111, following two's complement, this would be equal to -1,
-            # however, python treats this number as
-            print("This should be the number!: ", fromSignedWordToUnsignedWord(newNum))
+            while i <= 15:
+                newString += "1"
+                i += 1
+                # newNum = int(binStr[16:32], 2)
+                # the binary string in this case is 00100011100011001111111111111111
+                # and what should be extended is 1111111111111111, following two's complement, this would be equal to -1,
+                # however, python treats this number as
+                # print("This should be the number!: ", fromSignedWordToUnsignedWord(newNum))
         else:
             while i <= 15:
                 newString += "0"
                 print("extending sign... " + newString)
                 i += 1
+        print("before: ", newString)
         newString += binStr[16:32]
+        print("after: ", newString)
         print("this is inputStr : " + binStr)
         print("this is newString: " + newString)
 
         print("converting to decimal...")
 
+        output = fromUnsignedWordToSignedWord(int(newString, 2))
+        
+        print("this is output: ", output)
+
         print("=======RETURNING=======")
-        self.outputValues[self.outputName] = newString
+        self.outputValues[self.outputName] = output
 
 
 
