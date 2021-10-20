@@ -30,10 +30,9 @@ class Control(CPUElement):
         pass # randomControl has no data output
 
     def setControlSignal(self):
-        src, inputValue = self.inputValues
 
-        input = self.inputValues[self.inputName]
+        signal = self.inputValues[self.inputName]
         
         # Do something depending on the input
-        if inputValue == 103:
+        if signal == :
             return 0
