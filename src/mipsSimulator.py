@@ -10,7 +10,7 @@ from instructionMemory import InstructionMemory, TestInstructionMemory
 from dataMemory import DataMemory
 from constant import Constant
 from randomControl import RandomControl
-from alu import Alu
+from alu import Alu, TestAlu
 from aluControl import AluControl, TestAluControl
 from signExtend import SignExtend, TestSignExtend
 
@@ -54,9 +54,14 @@ class MIPSSimulator():
         # self.testSignExtend.test_correct_behavior()
 
         '''ALUCONTROL TEST'''
-        self.testAluControl = TestAluControl()
-        self.testAluControl.setUp()        
-        self.testAluControl.test_correct_behavior()
+        # self.testAluControl = TestAluControl()
+        # self.testAluControl.setUp()        
+        # self.testAluControl.test_correct_behavior()
+
+        '''ALU TEST'''
+        self.testAlu = TestAlu()
+        self.testAlu.setUp()
+        self.testAlu.test_correct_behavior()
 
 
     def _connectCPUElements(self):

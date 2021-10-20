@@ -14,9 +14,10 @@ class shiftLeftTwo(CPUElement):
         assert(len(control) == 0),              'shiftLeftTwo has no control signal'
         assert(len(outputSignalNames) == 0),    'ShiftLeftTwo should not have an output control signal' 
 
+        self.inputName = input[0][1]
         self.outputName = outputValueNames[0]
 
     def writeOutput(self):
-        self.inputValues *= 4
+        output = self.inputValues[self.inputName] * 4
 
-        self.outputValues[self.outputName] = self.inputValues
+        self.outputValues[self.outputName] = output

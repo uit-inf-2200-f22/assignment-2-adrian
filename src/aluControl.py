@@ -26,7 +26,6 @@ class AluControl(CPUElement):
         ctrlStr = f'{controlSignal:02b}'
         
         signalValue = int(binStr[28:32], 2)
-        print("========START========")
         print("signalValue is: ", signalValue)
         print("binary: ", binStr[28:32])
 
@@ -60,7 +59,6 @@ class AluControl(CPUElement):
                 print("set less than detected...")
                 self.outputControlSignals[self.outputControlName] = 7
         print("output value set!")
-        print("========STOP========")
 
 class TestAluControl(unittest.TestCase):
     def setUp(self):
@@ -88,6 +86,7 @@ class TestAluControl(unittest.TestCase):
         )
     
     def test_correct_behavior(self):
+        print("--------START--------")
         self.testInput.setOutputValue('signal', 8574458)
         self.testInput.setOutputControl('controlSignal', 1)
 
@@ -98,6 +97,5 @@ class TestAluControl(unittest.TestCase):
         self.testOutput.readControlSignals()
 
         output = self.testOutput.controlSignals['aluControl']
-        print("=======RESULT=======")
         print("output: ", output)
-        print("====================")
+        print("--------STOP--------")

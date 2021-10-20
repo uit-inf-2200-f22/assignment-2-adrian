@@ -27,7 +27,7 @@ class TestElement(CPUElement):
     def setOutputValue(self, name, value):
         self.outputValues[name] = value
     
-    def setOutputControl(self, name, value):
+    def setControlSignals(self, name, value):
         self.outputControlSignals[name] = value
     
     def writeOutput(self):
