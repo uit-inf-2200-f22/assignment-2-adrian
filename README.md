@@ -66,7 +66,7 @@ The simulator does the following:
 
 4.  Print the content of the registers and the number of cycles that were executed.
 
-The check for the break instruction is not implemented in the pre-code, and you must therefore add a mechanism to do this test. Also, note that the order the different elements are read from and written to is of significance and that reading to and writing from pipeline registers must be considered specially for the pipelining to work as intended. 
+The check for the break nistruction is not implemented in the pre-code, and you must therefore add a mechanism to do this test. Also, note that the order the different elements are read from and written to is of significance and that reading to and writing from pipeline registers must be considered specially for the pipelining to work as intended. 
 
 Included in the pre-code are a few simple programs with filetype “.mem”, implemented in binary code, which can be used to initialize the instruction and data memory elements. The file is a tab-delimited text file, where the first and second columns contain memory addresses and memory content, respectively, both represented as 32-bit hexadecimal numbers, and the third column contains comments. Note that although the comments are assembly code, your simulator should run using the binary code only. Also note that the memory addresses do start from different addresses, **0xbfc00000** and **0x0**, and that the program does not use any memory besides of that defined in the file. 
 
