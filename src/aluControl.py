@@ -86,9 +86,9 @@ class TestAluControl(unittest.TestCase):
         )
     
     def test_correct_behavior(self):
-        print("--------START--------")
+        print("========START========")
         self.testInput.setOutputValue('signal', 8574458)
-        self.testInput.setOutputControl('controlSignal', 1)
+        self.testInput.setOutputControl('controlSignal', 2)
 
         self.aluControl.readInput()
         self.aluControl.readControlSignals()

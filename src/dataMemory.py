@@ -3,8 +3,9 @@ Implements CPU element for Data Memory in MEM stage.
 
 Code written for inf-2200, University of Tromso
 '''
-
+import unittest
 from cpuElement import CPUElement
+from testElement import TestElement
 from memory import Memory
 import common
 
@@ -32,15 +33,68 @@ class DataMemory(Memory):
         memWriteControl = self.controlSignals[self.memWrite]
 
         assert (memReadControl is int) or (memWriteControl is int), 'Neither control signals are valid'
-        
 
-        if memReadControl != 0:
+        if memReadControl == 1 and memWriteControl == 0:
             # Self.output skal være lik en eller annen addresse som skal ut av minne. 
             self.outputValues = self.memory[self.inputValues[self.address]]
-
-        if memWriteControl != 0:
-            # det kommer inn en verdi som skal skrives til data memory
+            print("fetching data: ", self.memory[self.inputValues[self.address]])
+        elif memWriteControl == 1 and memReadControl == 0:
+            # Det kommer inn en verdi som skal skrives til data memory
             self.memory[self.address] = self.inputValues[self.writeData]
+            print("data stored in memory: ", self.memory[self.address])
+        else:
+            raise ValueError("either control signals have values other than 0 or 1")
 
-        # Remove this and replace with your implementation!
-        raise AssertionError("writeOutput not implemented in class DataMemory!")
+class TestDataMemory(unittest.TestCase):
+    def setUp(self):
+        self.testInput = TestElement()
+        self.dataMemory = DataMemory()
+        self.testOutput = TestElement()
+
+        self.testInput.connect(
+            [],
+            ['address', 'writeData'],
+            [],
+            ['memWrite', 'memRead']
+        )
+        self.dataMemory.connect(
+            [(self.testInput, 'address'),(self.testOutput, 'writeData')],
+            ['readData'],
+            [(self.testInput, 'memWrite'), (self.testInput, 'memRead')],
+            []
+        )
+        self.testOutput.connect(
+            [(self.dataMemory, 'readData')],
+            [],
+            [],
+            []
+        )
+
+    def test_correct_behavior(self):
+        print("========START========")
+        self.testInput.setOutputValue('address', 266481593)
+        self.testInput.setOutputValue('writeData', 102)
+        self.testInput.setControlSignals('memWrite', 1)
+        self.testInput.setControlSignals('memRead', 0)
+
+        self.dataMemory.readInput()
+        self.dataMemory.readControlSignals()
+        self.dataMemory.writeOutput()
+
+        self.testOutput.readInput()
+        print("output: ", self.testOutput.inputValues['readData'])
+        print("=====================")
+        
+        print("========START========")
+        self.testInput.setOutputValue('address', 266481593)
+        self.testInput.setOutputValue('writeData', 102)
+        self.testInput.setControlSignals('memWrite', 0)
+        self.testInput.setControlSignals('memRead', 1)
+
+        self.dataMemory.readInput()
+        self.dataMemory.readControlSignals()
+        self.dataMemory.writeOutput()
+
+        self.testOutput.readInput()
+        print("output: ", self.testOutput.inputValues['readData'])
+        print("=====================")
