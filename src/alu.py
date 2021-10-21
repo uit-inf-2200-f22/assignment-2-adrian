@@ -36,6 +36,7 @@ class Alu(CPUElement):
         elif controlSignal == 1:
             self.outputValues[self.outputName] = readData1 | muxDecision
         elif controlSignal == 7:
+            # In case of SLT, the output is irrelevant, I think
             if readData1 > muxDecision:
                 self.outputValues[self.outputName] = 1
             elif readData1 < muxDecision:
@@ -46,7 +47,10 @@ class Alu(CPUElement):
             print("no valid control signal given")
 
     def setControlSignals(self):
-        pass
+        if self.outputValues[self.outputName] == 1:
+            self.controlSignals[self.controlOutputName] = 1
+        else:
+            self.controlSignals[self.controlOutputName] = 0
 
 class TestAlu(unittest.TestCase):
     def setUp(self):

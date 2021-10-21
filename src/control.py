@@ -34,5 +34,5 @@ class Control(CPUElement):
         signal = self.inputValues[self.inputName]
         
         # Do something depending on the input
-        if signal == :
+        if signal == 1:
             return 0
