@@ -37,11 +37,10 @@ class DataMemory(Memory):
         if memReadControl == 1 and memWriteControl == 0:
             self.outputValues[self.outputName] = self.memory[self.inputValues[self.address]]
             print("memRead: ", self.memory[self.inputValues[self.address]])
-        elif memWriteControl == 1 and memReadControl == 0:
+            
+        if memWriteControl == 1 and memReadControl == 0:
             self.memory[self.address] = self.inputValues[self.writeData]
             print("memWrite: ", self.memory[self.address])
-        else:
-            raise ValueError("either control signals have values other than 0 or 1")
 
 class TestDataMemory(unittest.TestCase):
     def setUp(self, memoryFile):
