@@ -21,34 +21,32 @@ class DataMemory(Memory):
         assert(len(control) == 2), 'Datamemory should have 2 control signal inputs'
         assert(len(outputSignalNames) == 0), 'Datamemory should not have any control output'
 
-        self.memory =self.memory
-        self.memWrite = control[0][1]       # self.memWrite inneholder nå navnet til memory write keyen
-        self.memRead = control[1][1]        # self.memRead inneholder nå navnet til memory read keyen
-        self.address = inputSources[0][1]   # self.address inneholder nå navnet til inputen, som kan brukes for å hente output
+        self.memory = {266481593: 95}
+        self.memWrite = control[0][1]           # self.memWrite inneholder nå navnet til memory write keyen
+        self.memRead = control[1][1]            # self.memRead inneholder nå navnet til memory read keyen
+        self.outputName = outputValueNames[0]   # self.outputName inneholder nå navnet på verdien som skal ut av memory
+        self.address = inputSources[0][1]       # self.address inneholder nå navnet til inputen, som kan brukes for å hente output
         self.writeData = inputSources[1][1]
         
     def writeOutput(self):
 
         memReadControl = self.controlSignals[self.memRead]
         memWriteControl = self.controlSignals[self.memWrite]
-
-        assert (memReadControl is int) or (memWriteControl is int), 'Neither control signals are valid'
+        print("control signals", memReadControl, memWriteControl)
 
         if memReadControl == 1 and memWriteControl == 0:
-            # Self.output skal være lik en eller annen addresse som skal ut av minne. 
-            self.outputValues = self.memory[self.inputValues[self.address]]
-            print("fetching data: ", self.memory[self.inputValues[self.address]])
+            self.outputValues[self.outputName] = self.memory[self.inputValues[self.address]]
+            print("memRead: ", self.memory[self.inputValues[self.address]])
         elif memWriteControl == 1 and memReadControl == 0:
-            # Det kommer inn en verdi som skal skrives til data memory
             self.memory[self.address] = self.inputValues[self.writeData]
-            print("data stored in memory: ", self.memory[self.address])
+            print("memWrite: ", self.memory[self.address])
         else:
             raise ValueError("either control signals have values other than 0 or 1")
 
 class TestDataMemory(unittest.TestCase):
     def setUp(self, memoryFile):
         self.testInput = TestElement()
-        self.dataMemory = DataMemory()
+        self.dataMemory = DataMemory(memoryFile)
         self.testOutput = TestElement()
 
         self.testInput.connect(
@@ -58,7 +56,7 @@ class TestDataMemory(unittest.TestCase):
             ['memWrite', 'memRead']
         )
         self.dataMemory.connect(
-            [(self.testInput, 'address'),(self.testOutput, 'writeData')],
+            [(self.testInput, 'address'),(self.testInput, 'writeData')],
             ['readData'],
             [(self.testInput, 'memWrite'), (self.testInput, 'memRead')],
             []
@@ -74,8 +72,8 @@ class TestDataMemory(unittest.TestCase):
         print("========START========")
         self.testInput.setOutputValue('address', 266481593)
         self.testInput.setOutputValue('writeData', 102)
-        self.testInput.setControlSignals('memWrite', 1)
-        self.testInput.setControlSignals('memRead', 0)
+        self.testInput.setControlSignals('memWrite', 0)
+        self.testInput.setControlSignals('memRead', 1)
 
         self.dataMemory.readInput()
         self.dataMemory.readControlSignals()
@@ -88,8 +86,8 @@ class TestDataMemory(unittest.TestCase):
         print("========START========")
         self.testInput.setOutputValue('address', 266481593)
         self.testInput.setOutputValue('writeData', 102)
-        self.testInput.setControlSignals('memWrite', 0)
-        self.testInput.setControlSignals('memRead', 1)
+        self.testInput.setControlSignals('memWrite', 1)
+        self.testInput.setControlSignals('memRead', 0)
 
         self.dataMemory.readInput()
         self.dataMemory.readControlSignals()
