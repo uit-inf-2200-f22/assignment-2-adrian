@@ -70,8 +70,8 @@ class MIPSSimulator():
         # self.testControl.test_correct_behavior()
 
         '''DATAMEMORY TEST'''
-        self.testDataMemory = TestDataMemory(memoryFile)
-        self.testDataMemory.setUp()
+        self.testDataMemory = TestDataMemory()
+        self.testDataMemory.setUp(memoryFile)
         self.testDataMemory.test_correct_behavior()
 
     def _connectCPUElements(self):

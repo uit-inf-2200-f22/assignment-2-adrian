@@ -46,7 +46,7 @@ class DataMemory(Memory):
             raise ValueError("either control signals have values other than 0 or 1")
 
 class TestDataMemory(unittest.TestCase):
-    def setUp(self):
+    def setUp(self, memoryFile):
         self.testInput = TestElement()
         self.dataMemory = DataMemory()
         self.testOutput = TestElement()
