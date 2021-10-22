@@ -4,6 +4,7 @@ Code written for inf-2200, University of Tromso
 
 import unittest
 from cpuElement import CPUElement
+from testElement import TestElement
 import common
 
 
@@ -68,20 +69,56 @@ class RegisterFile(CPUElement):
 
     def writeOutput(self):
         binStr = f'{self.inputValues[self.inputIM]:032b}'
+        controlSignal = self.controlSignals[self.controlName]
 
         rr1 = int(binStr[6:11], 2)
         rr2 = int(binStr[11:16], 2)
-
         wr = self.inputValues[self.inputMuxIM]
+        
+        self.outputValues[self.readData1] = self.register[rr1]
+        self.outputValues[self.readData2] = self.register[rr2]
+        
+        if controlSignal == 1:
+            self.register[wr] = self.inputValues[self.inputMuxDM]
 
 class TestRegisterFile(unittest.TestCase):
     def setUp(self):
         # Implement me!
-        pass
+        self.testInput = TestElement()
+        self.registerFile = RegisterFile()
+        self.testOutput = TestElement()
+
+        self.testInput.connect(
+            [],
+            ['IM', 'MUX', 'DM'],
+            [],
+            ['regWrite']
+        )
+        self.registerFile.connect(
+            [(self.testInput, 'IM'), (self.testInput, 'MUX'), (self.testInput, 'DM')],
+            ['rd1', 'rd2'],
+            [(self.testInput, 'regWrite')],
+            []
+        )
+        self.testOutput.connect(
+            [(self.registerFile, 'rd1'), (self.registerFile, 'rd2')],
+            [],
+            [],
+            []
+        )
+    # latex article class: "ieetran"?
 
     def test_correct_behavior(self):
         # Implement me!
-        pass
+        self.testInput.setOutputValue('IM', 4464894)
+        self.testInput.setOutputValue('MUX', 9)
+        
+        self.registerFile.readInput()
+        self.registerFile.readControlSignals()
+        self.registerFile.writeOutput()
+
+        self.testOutput.readInput()
+        
 
 
 if __name__ == '__main__':
