@@ -24,7 +24,18 @@ class RegisterFile(CPUElement):
         CPUElement.connect(self, inputSources,
                            outputValueNames, control, outputSignalNames)
 
-        # Implement me!
+        assert(len(inputSources) == 3),         'registerFile should have 3 inputs'
+        assert(len(outputValueNames) == 2),     'registerFile should have 2 outputs'
+        assert(len(control) == 1),              'registerFile should only have 1 control input'
+        assert(len(outputSignalNames) == 0),    'registerFile does not have any control signal output'
+
+        self.inputIM = inputSources[0][1]
+        self.inputMuxIM = inputSources[1][1]
+        self.inputMuxDM = inputSources[2][1] # Unsure how to do this excactly, the register file technically has to run twice now since the write data happens at the end of the path
+
+        self.controlName = control[0]
+        self.readData1 = outputValueNames[0]
+        self.readData2 = outputValueNames[1]
 
     def printAll(self):
         '''
@@ -40,7 +51,28 @@ class RegisterFile(CPUElement):
         print("================")
         print()
         print()
+        
+        '''test for checking where the respective signals are found'''
+        # value = 1829511764
 
+        # binStr = f'{value:032b}'
+    
+        # test1 = binStr[6:11]
+        # test2 = binStr[11:16]
+        # test3 = binStr[16:21]
+
+        # print("binStr: " + binStr)
+        # print("25-21: " + test1)
+        # print("20-16: " + test2)
+        # print("15-11: " + test3)
+
+    def writeOutput(self):
+        binStr = f'{self.inputValues[self.inputIM]:032b}'
+
+        rr1 = int(binStr[6:11], 2)
+        rr2 = int(binStr[11:16], 2)
+
+        wr = self.inputValues[self.inputMuxIM]
 
 class TestRegisterFile(unittest.TestCase):
     def setUp(self):

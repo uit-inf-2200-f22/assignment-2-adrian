@@ -16,10 +16,10 @@ class DataMemory(Memory):
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
         
-        assert(len(inputSources) == 2), 'Datamemory should have 2 inputs'
-        assert(len(outputValueNames) == 1), 'Datamemory has only one output'
-        assert(len(control) == 2), 'Datamemory should have 2 control signal inputs'
-        assert(len(outputSignalNames) == 0), 'Datamemory should not have any control output'
+        assert(len(inputSources) == 2),         'Datamemory should have 2 inputs'
+        assert(len(outputValueNames) == 1),     'Datamemory has only one output'
+        assert(len(control) == 2),              'Datamemory should have 2 control signal inputs'
+        assert(len(outputSignalNames) == 0),    'Datamemory should not have any control output'
 
         self.memory = {266481593: 95}
         self.memWrite = control[0][1]           # self.memWrite inneholder nå navnet til memory write keyen
@@ -37,7 +37,7 @@ class DataMemory(Memory):
         if memReadControl == 1 and memWriteControl == 0:
             self.outputValues[self.outputName] = self.memory[self.inputValues[self.address]]
             print("memRead: ", self.memory[self.inputValues[self.address]])
-            
+
         if memWriteControl == 1 and memReadControl == 0:
             self.memory[self.address] = self.inputValues[self.writeData]
             print("memWrite: ", self.memory[self.address])
