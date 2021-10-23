@@ -8,8 +8,9 @@ own, isolated copy of the data from the memory file.
 
 Code written for inf-2200, University of Tromso
 '''
-
+import unittest
 from cpuElement import CPUElement
+from testElement import TestElement
 import common
 
 class Memory(CPUElement):
@@ -46,9 +47,18 @@ class Memory(CPUElement):
         # Populating the self.memory dictionary
         i = 0
         while i < len(address):
-            self.memory.pop(int(address[i]), int(instruction[i]))
+            self.memory[int(address[i])] = int(instruction[i])
             i += 1
+
 
     def printAll(self):
         for key in sorted(self.memory.keys()):
             print("%s\t=> %s\t(%s)" % (hex(int(key)), common.fromUnsignedWordToSignedWord(self.memory[key]), hex(int(self.memory[key]))))
+
+class TestMemory(unittest.TestCase):
+    def setUp(self, file):
+        self.memory = Memory(file)
+
+    def test_correct_behavior(self):
+        for i in self.memory.memory:
+            print(f'{i} : {self.memory.memory[i]} \t {self.memory.memory[i]:032b}')
