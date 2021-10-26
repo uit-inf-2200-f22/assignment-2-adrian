@@ -109,7 +109,6 @@ class TestRegisterFile(unittest.TestCase):
     # latex article class: "ieetran"?
 
     def test_correct_behavior(self):
-        # Implement me!
         self.testInput.setOutputValue('IM', 4464894)
         self.testInput.setOutputValue('MUX', 9)
         
@@ -118,8 +117,6 @@ class TestRegisterFile(unittest.TestCase):
         self.registerFile.writeOutput()
 
         self.testOutput.readInput()
-        
-
 
 if __name__ == '__main__':
     unittest.main()
