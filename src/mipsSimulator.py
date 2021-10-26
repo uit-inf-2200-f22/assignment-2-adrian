@@ -56,9 +56,9 @@ class MIPSSimulator():
         # self.testSignExtend.test_correct_behavior()
 
         '''ALUCONTROL TEST'''
-        # self.testAluControl = TestAluControl()
-        # self.testAluControl.setUp()        
-        # self.testAluControl.test_correct_behavior()
+        self.testAluControl = TestAluControl()
+        self.testAluControl.setUp()        
+        self.testAluControl.test_correct_behavior()
 
         '''ALU TEST'''
         # self.testAlu = TestAlu()
@@ -81,9 +81,9 @@ class MIPSSimulator():
         # self.testRegisterFile.test_correct_behavior()
 
         '''MEMORY TEST'''
-        self.memory = TestMemory()
-        self.memory.setUp(memoryFile)
-        self.memory.test_correct_behavior()
+        # self.memory = TestMemory()
+        # self.memory.setUp(memoryFile)
+        # self.memory.test_correct_behavior()
 
     def _connectCPUElements(self):
         self.constant3.connect(

@@ -25,6 +25,7 @@ class AluControl(CPUElement):
         binStr = f'{signal:032b}'
         ctrlStr = f'{controlSignal:02b}'
         
+        # Only the 4 last bits in the func field are relevant
         signalValue = int(binStr[28:32], 2)
         print("signalValue is: ", signalValue)
         print("binary: ", binStr[28:32])
@@ -88,7 +89,7 @@ class TestAluControl(unittest.TestCase):
     def test_correct_behavior(self):
         print("========START========")
         self.testInput.setOutputValue('signal', 8574458)
-        self.testInput.setOutputControl('controlSignal', 2)
+        self.testInput.setControlSignals('controlSignal', 2)
 
         self.aluControl.readInput()
         self.aluControl.readControlSignals()
