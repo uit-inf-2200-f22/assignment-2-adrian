@@ -85,6 +85,11 @@ class MIPSSimulator():
         # self.memory.setUp(memoryFile)
         # self.memory.test_correct_behavior()
 
+        '''REGISTER FILE TEST'''
+        self.registerFile = TestRegisterFile()
+        self.registerFile.setUp()
+        self.registerFile.test_correct_behavior()
+
     def _connectCPUElements(self):
         self.constant3.connect(
             [],
