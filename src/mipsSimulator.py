@@ -56,9 +56,9 @@ class MIPSSimulator():
         # self.testSignExtend.test_correct_behavior()
 
         '''ALUCONTROL TEST'''
-        # self.testAluControl = TestAluControl()
-        # self.testAluControl.setUp()        
-        # self.testAluControl.test_correct_behavior()
+        self.testAluControl = TestAluControl()
+        self.testAluControl.setUp()        
+        self.testAluControl.test_correct_behavior()
 
         '''ALU TEST'''
         # self.testAlu = TestAlu()
