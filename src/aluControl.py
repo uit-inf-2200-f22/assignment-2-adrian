@@ -33,17 +33,17 @@ class AluControl(CPUElement):
         print("checking aluOP signal...")
         print("aluOP is: ", ctrlStr)
         if controlSignal == 0:
-            print("load/store operation detected...")
+            print("I-instruction detected...")
             print("add detected...")
             self.outputControlSignals[self.outputControlName] = 2
 
         if ctrlStr[0] == '0':
-            print("branch equal operation detected...")
+            print("branch on equal operation detected...")
             print("sub detected...")
             self.outputControlSignals[self.outputControlName] = 6
         
         if ctrlStr[0] == '1':
-            print("arithemtic operation detected...")
+            print("R-instruction detected...")
             if signalValue == 0:
                 print("add detected...")
                 self.outputControlSignals[self.outputControlName] = 2
@@ -57,7 +57,7 @@ class AluControl(CPUElement):
                 print("or detected...")
                 self.outputControlSignals[self.outputControlName] = 1
             if signalValue == 10:
-                print("set less than detected...")
+                print("set on less than detected...")
                 self.outputControlSignals[self.outputControlName] = 7
         print("output value set!")
 

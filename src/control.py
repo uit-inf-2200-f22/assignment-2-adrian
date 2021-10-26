@@ -64,33 +64,33 @@ class Control(CPUElement):
             self.outputControlSignals[self.memRead] = 0
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
-            self.outputControlSignals[self.ALUOp] = 2
+            self.outputControlSignals[self.ALUOp] = 0
 
             self.outputControlSignals[self.jump] = 0
 
         if signalValue == 8:
             print("addi detected")
-            self.outputControlSignals[self.regDst] = 1
-            self.outputControlSignals[self.ALUSrc] = 0
+            self.outputControlSignals[self.regDst] = 0
+            self.outputControlSignals[self.ALUSrc] = 1
             self.outputControlSignals[self.memtoReg] = 0
             self.outputControlSignals[self.regWrite] = 1
             self.outputControlSignals[self.memRead] = 0
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
-            self.outputControlSignals[self.ALUOp] = 2
+            self.outputControlSignals[self.ALUOp] = 0
 
             self.outputControlSignals[self.jump] = 0
 
-        if signalValue == 9:
+        if signalValue == 9:    # in the acutal binary code, 37, or 100101 is given for addiu, might have to do 2 checks for addiu
             print("addiu detected")
-            self.outputControlSignals[self.regDst] = 1
-            self.outputControlSignals[self.ALUSrc] = 0
+            self.outputControlSignals[self.regDst] = 0
+            self.outputControlSignals[self.ALUSrc] = 1
             self.outputControlSignals[self.memtoReg] = 0
             self.outputControlSignals[self.regWrite] = 1
             self.outputControlSignals[self.memRead] = 0
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
-            self.outputControlSignals[self.ALUOp] = 2
+            self.outputControlSignals[self.ALUOp] = 0
 
             self.outputControlSignals[self.jump] = 0
 
@@ -103,7 +103,7 @@ class Control(CPUElement):
             self.outputControlSignals[self.memRead] = 0
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
-            self.outputControlSignals[self.ALUOp] = 2
+            self.outputControlSignals[self.ALUOp] = 0
 
             self.outputControlSignals[self.jump] = 0
 
@@ -136,14 +136,14 @@ class Control(CPUElement):
         '''J-FORMAT INSTRUCTIONS'''
         if signalValue == 2:
             print("J detected")
-            self.outputControlSignals[self.regDst] = 1
+            self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 0
             self.outputControlSignals[self.memtoReg] = 0
-            self.outputControlSignals[self.regWrite] = 1
+            self.outputControlSignals[self.regWrite] = 0
             self.outputControlSignals[self.memRead] = 0
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
-            self.outputControlSignals[self.ALUOp] = 2
+            self.outputControlSignals[self.ALUOp] = 0
 
             self.outputControlSignals[self.jump] = 1
 
