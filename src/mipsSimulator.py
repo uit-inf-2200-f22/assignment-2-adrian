@@ -5,7 +5,7 @@ Code written for inf-2200, University of Tromso
 from pc import PC
 from add import Add
 from mux import Mux
-from registerFile import RegisterFile
+from registerFile import RegisterFile, TestRegisterFile
 from instructionMemory import InstructionMemory, TestInstructionMemory
 from dataMemory import DataMemory, TestDataMemory
 from constant import Constant
@@ -14,6 +14,7 @@ from control import Control, TestControl
 from alu import Alu, TestAlu
 from aluControl import AluControl, TestAluControl
 from signExtend import SignExtend, TestSignExtend
+from memory import Memory, TestMemory
 
 class MIPSSimulator():
     '''Main class for MIPS pipeline simulator.
@@ -70,9 +71,19 @@ class MIPSSimulator():
         # self.testControl.test_correct_behavior()
 
         '''DATAMEMORY TEST'''
-        self.testDataMemory = TestDataMemory()
-        self.testDataMemory.setUp(memoryFile)
-        self.testDataMemory.test_correct_behavior()
+        # self.testDataMemory = TestDataMemory()
+        # self.testDataMemory.setUp(memoryFile)
+        # self.testDataMemory.test_correct_behavior()
+
+        '''REGISTER FILE TEST'''
+        # self.testRegisterFile = TestRegisterFile()
+        # self.testRegisterFile.setUp()
+        # self.testRegisterFile.test_correct_behavior()
+
+        '''MEMORY TEST'''
+        self.memory = TestMemory()
+        self.memory.setUp(memoryFile)
+        self.memory.test_correct_behavior()
 
     def _connectCPUElements(self):
         self.constant3.connect(

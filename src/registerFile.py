@@ -34,7 +34,7 @@ class RegisterFile(CPUElement):
         self.inputMuxIM = inputSources[1][1]
         self.inputMuxDM = inputSources[2][1] # Unsure how to do this excactly, the register file technically has to run twice now since the write data happens at the end of the path
 
-        self.controlName = control[0]
+        self.controlName = control[0][1]
         self.readData1 = outputValueNames[0]
         self.readData2 = outputValueNames[1]
 
@@ -71,19 +71,28 @@ class RegisterFile(CPUElement):
         binStr = f'{self.inputValues[self.inputIM]:032b}'
         controlSignal = self.controlSignals[self.controlName]
 
+        print("input binStr: ", binStr)
+        print("control signal: ", controlSignal)
+
         rr1 = int(binStr[6:11], 2)
         rr2 = int(binStr[11:16], 2)
+
+        print(f'read register {rr1} and {rr2}')
+
         wr = self.inputValues[self.inputMuxIM]
         
+        print(f'value in {rr1}: {self.register[rr1]}')
+        print(f'value in {rr2}: {self.register[rr2]}')
+
         self.outputValues[self.readData1] = self.register[rr1]
         self.outputValues[self.readData2] = self.register[rr2]
         
         if controlSignal == 1:
+            print(f'writing {self.inputValues[self.inputMuxDM]} to register {wr}')
             self.register[wr] = self.inputValues[self.inputMuxDM]
 
 class TestRegisterFile(unittest.TestCase):
     def setUp(self):
-        # Implement me!
         self.testInput = TestElement()
         self.registerFile = RegisterFile()
         self.testOutput = TestElement()
@@ -109,14 +118,37 @@ class TestRegisterFile(unittest.TestCase):
     # latex article class: "ieetran"?
 
     def test_correct_behavior(self):
+        print("========READ REGISTER========")
+        self.registerFile.register[2] = 21
+        self.registerFile.register[4] = 69
         self.testInput.setOutputValue('IM', 4464894)
         self.testInput.setOutputValue('MUX', 9)
+        self.testInput.setControlSignals('regWrite', 0)
         
         self.registerFile.readInput()
         self.registerFile.readControlSignals()
         self.registerFile.writeOutput()
 
         self.testOutput.readInput()
+        op1, op2 =self.testOutput.inputValues['rd1'], self.testOutput.inputValues['rd2']
+
+        print(f'output: {op1} {op2}')
+        print("=============================")
+
+        print("========READ REGISTER========")
+        self.registerFile.register[2] = 80085
+        self.registerFile.register[4] = 420
+        self.testInput.setOutputValue('IM', 4464894)
+        self.testInput.setOutputValue('MUX', 9)
+        self.testInput.setOutputValue('DM', 1337)
+        self.testInput.setControlSignals('regWrite', 1)
+
+        self.registerFile.readInput()
+        self.registerFile.readControlSignals()
+        self.registerFile.writeOutput()
+        
+        print(f'register 9 now contains: {self.registerFile.register[9]}')
+        print("=============================")
 
 if __name__ == '__main__':
     unittest.main()

@@ -90,6 +90,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.ALUOp] = 1
 
             self.outputControlSignals[self.jump] = 100
+        if signalValue == 5:
+            pass
 
 class TestControl(unittest.TestCase):
     def setUp(self):
