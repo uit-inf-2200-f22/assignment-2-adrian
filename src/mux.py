@@ -72,7 +72,7 @@ class TestMux(unittest.TestCase):
             []
         )
     
-    def test_correct_behavior(self):
+    def test_correct_behaviour(self):
         self.testInput.setOutputValue('dataA', 10)                  # Setter output verdi som mappes til 'dataA' til 10,
         self.testInput.setOutputValue('dataB', 20)                  # Setter output verdi som mappes til 'dataB' til 20
         

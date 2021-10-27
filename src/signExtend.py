@@ -22,24 +22,18 @@ class SignExtend(CPUElement):
 
     def writeOutput(self):
         signal = self.inputValues[self.inputName]
-       
-        # binStr now contains a string of binary code 0-31 bit, reads the 15th, if 1, makes 15-31 1, if not, 0
-        # the binStrings are indexed from the top, meaning binStr[0] is the 32nd bit.
-        binStr = f'{signal:032b}'
+
+        # binStr now contains a string of binary code, that should e extended, reads the first bit and calculates accordingly
+        # the binStrings are indexed from the top, meaning binStr[0] is the 16th bit.
+        binStr = f'{signal:016b}'
         print("=======STARTING=======")
         print("input binary string", binStr)
-        print("16 bit that should be extended:    ", binStr[16:32])
         i = 0
-        newString = "0b"
-        if binStr[16] == "1":
+        newString = ""                                  # Since adding characters at the start of a string in python
+        if binStr[0] == "1":
             while i <= 15:
                 newString += "1"
                 i += 1
-                # newNum = int(binStr[16:32], 2)
-                # the binary string in this case is 00100011100011001111111111111111
-                # and what should be extended is 1111111111111111, following two's complement, this would be equal to -1,
-                # however, python treats this number as
-                # print("This should be the number!: ", fromSignedWordToUnsignedWord(newNum))
         else:
             while i <= 15:
                 newString += "0"
@@ -56,10 +50,9 @@ class SignExtend(CPUElement):
         output = fromUnsignedWordToSignedWord(int(newString, 2))
         
         print("this is output: ", output)
-
+        
         print("=======RETURNING=======")
         self.outputValues[self.outputName] = output
-
 
 
 class TestSignExtend(unittest.TestCase):
@@ -87,10 +80,10 @@ class TestSignExtend(unittest.TestCase):
             []
         )
 
-    def test_correct_behavior(self):
-
+    def test_correct_behaviour(self):
+        
         self.testInput.setOutputValue('signal', 596443135)
-
+        
         self.signExtend.readInput()
         self.signExtend.writeOutput()
         self.testOutput.readInput()

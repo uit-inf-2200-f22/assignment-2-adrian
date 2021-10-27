@@ -59,6 +59,6 @@ class TestMemory(unittest.TestCase):
     def setUp(self, file):
         self.memory = Memory(file)
 
-    def test_correct_behavior(self):
+    def test_correct_behaviour(self):
         for i in self.memory.memory:
             print(f'{i} : {self.memory.memory[i]} \t {self.memory.memory[i]:032b}')

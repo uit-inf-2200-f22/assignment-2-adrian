@@ -16,49 +16,56 @@ class AluControl(CPUElement):
 
         self.controlName = control[0][1]
         self.inputName = inputSources[0][1]
-        self.outputControlName = outputSignalNames[0]
+        self.outputSignalName = outputSignalNames[0]
 
     def setControlSignals(self): 
         controlSignal = self.controlSignals[self.controlName]
-        signal = self.inputValues[self.inputName]
-        
-        binStr = f'{signal:032b}'
         ctrlStr = f'{controlSignal:02b}'
+
+        signal = self.inputValues[self.inputName]        
+        binStr = f'{signal:06b}'
         
         # Only the 4 last bits in the func field are relevant
-        signalValue = int(binStr[28:32], 2)
+        signalValue = binStr[2:6]
         print("signalValue is: ", signalValue)
-        print("binary: ", binStr[28:32])
+        # print(f'binary: {signalValue:04b}')
 
         print("checking aluOP signal...")
         print("aluOP is: ", ctrlStr)
+
         if controlSignal == 0:
             print("I-instruction detected...")
-            print("add detected...")
-            self.outputControlSignals[self.outputControlName] = 2
-
+            print("add...")
+            self.outputControlSignals[self.outputSignalName] = 2
+        
         if ctrlStr[0] == '0':
             print("branch on equal operation detected...")
-            print("sub detected...")
-            self.outputControlSignals[self.outputControlName] = 6
+            print("sub...")
+            self.outputControlSignals[self.outputSignalName] = 6
         
         if ctrlStr[0] == '1':
             print("R-instruction detected...")
             if signalValue == 0:
                 print("add detected...")
-                self.outputControlSignals[self.outputControlName] = 2
+                self.outputControlSignals[self.outputSignalName] = 2
+            if signalValue == 1:
+                print("addu detected...")
+                self.outputControlSignals[self.outputSignalName] = 3        # There does not seem to be any official aluOperation output matchin a addu, so 3 is arbitrarily chosen here
             if signalValue == 2:
                 print("sub detected...")
-                self.outputControlSignals[self.outputControlName] = 6
+                self.outputControlSignals[self.outputSignalName] = 6
+            if signalValue == 3:
+                print("subu detected...")
+                self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here
             if signalValue == 4:
                 print("and detected...")
-                self.outputControlSignals[self.outputControlName] = 0
+                self.outputControlSignals[self.outputSignalName] = 0
             if signalValue == 5:
                 print("or detected...")
-                self.outputControlSignals[self.outputControlName] = 1
+                self.outputControlSignals[self.outputSignalName] = 1
             if signalValue == 10:
                 print("set on less than detected...")
-                self.outputControlSignals[self.outputControlName] = 7
+                self.outputControlSignals[self.outputSignalName] = 7
         print("output value set!")
 
 class TestAluControl(unittest.TestCase):
@@ -86,9 +93,9 @@ class TestAluControl(unittest.TestCase):
             []
         )
     
-    def test_correct_behavior(self):
+    def test_correct_behaviour(self):
         print("========START========")
-        self.testInput.setOutputValue('signal', 8574458)
+        self.testInput.setOutputValue('signal', int('000001', 2))
         self.testInput.setControlSignals('controlSignal', 2)
 
         self.aluControl.readInput()

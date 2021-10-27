@@ -29,24 +29,39 @@ class Alu(CPUElement):
 
         if controlSignal == 2:
             self.outputValues[self.outputName] = readData1 + muxDecision
+        elif controlSignal == 3:
+            result = readData1 + muxDecision
+            if result > 2147483648:
+                raise ValueError("overflow")
+            else:
+                self.outputValues[self.outputName] = result
         elif controlSignal == 6:
             self.outputValues[self.outputName] = readData1 - muxDecision
+        elif controlSignal == 4:
+            result = readData1 - muxDecision
+            if result < 0:
+                raise ValueError("overflow")
+            else:
+                self.outputValues[self.outputName] = result
         elif controlSignal == 0:
             self.outputValues[self.outputName] = readData1 & muxDecision
         elif controlSignal == 1:
             self.outputValues[self.outputName] = readData1 | muxDecision
         elif controlSignal == 7:
-            if readData1 > muxDecision:
+            if readData1 < muxDecision:
                 self.outputValues[self.outputName] = 1
-            elif readData1 < muxDecision:
-                self.outputValues[self.outputName] = 0
             else:
-                print("readData1 and muxDecision are equal... what now")
+                self.outputValues[self.outputName] = 0
         else:
             print("no valid control signal given")
 
     def setControlSignals(self):
-        pass
+        readData1 = self.inputValues[self.inputNameOne]
+        muxDecision = self.inputValues[self.inputNameTwo]
+        result = readData1 - muxDecision
+        if result == 0:
+            # rs - rt = 0, therefore zero signal is activated
+            self.outputControlSignals[self.controlOutputName] = 1
 
 class TestAlu(unittest.TestCase):
     def setUp(self):
@@ -71,16 +86,16 @@ class TestAlu(unittest.TestCase):
             [(self.testInput1, 'readData1'), (self.testInput2, 'muxDecision')],
             ['aluResult'],
             [(self.testInput1, 'aluControl')],
-            ['aluControlOutput']
+            ['zero']
         )
         self.testOutput.connect(
             [(self.alu, 'aluResult')],
             [],
-            [(self.alu, 'aluControlOutput')],
+            [(self.alu, 'zero')],
             []
         )
 
-    def test_correct_behavior(self):
+    def test_correct_behaviour(self):
         print("=======TESTING ADD=======")
         print("expected result: 150")
         self.testInput1.setOutputValue('readData1', 100)
@@ -93,8 +108,10 @@ class TestAlu(unittest.TestCase):
         self.alu.setControlSignals()
 
         self.testOutput.readInput()
+        self.testOutput.readControlSignals()
         output = self.testOutput.inputValues['aluResult']
-        print("output: ", output)
+        control = self.testOutput.controlSignals['zero']
+        print("output: ", output, "zero: ", control)
         if output == 150:
             print("TEST SUCCESS!")
         else:
@@ -102,9 +119,9 @@ class TestAlu(unittest.TestCase):
         print("=========================\n")
 
         print("=======TESTING SUB=======")
-        print("expected result: 150")
+        print("expected result: 0")
         self.testInput1.setOutputValue('readData1', 100)
-        self.testInput2.setOutputValue('muxDecision', 50)
+        self.testInput2.setOutputValue('muxDecision', 100)
         self.testInput1.setControlSignals('aluControl', 6)
 
         self.alu.readInput()
@@ -113,8 +130,10 @@ class TestAlu(unittest.TestCase):
         self.alu.setControlSignals()
         
         self.testOutput.readInput()
+        self.testOutput.readControlSignals()
         output = self.testOutput.inputValues['aluResult']
-        print("output: ", output)
+        control = self.testOutput.controlSignals['zero']
+        print("output: ", output, "zero: ", control)
         if output == 50:
             print("TEST SUCCESS!")
         else:
@@ -162,7 +181,7 @@ class TestAlu(unittest.TestCase):
         print("=========================\n")
 
         print("=======TESTING SLT=======")
-        print("excpected result: [unknow]")
+        print("excpected result: 0")
         self.testInput1.setOutputValue('readData1', 100)
         self.testInput2.setOutputValue('muxDecision', 50)
         self.testInput1.setControlSignals('aluControl', 7)
@@ -174,6 +193,9 @@ class TestAlu(unittest.TestCase):
         
         self.testOutput.readInput()
         output = self.testOutput.inputValues['aluResult']
-        print("No excpected result as of now, come back when registers are implemented")
         print("Result: ", output)
+        if output == 0:
+            print("TEST SUCCESS!")
+        else:
+            print("STL FAILED")
         print("=========================\n")

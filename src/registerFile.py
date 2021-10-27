@@ -25,14 +25,15 @@ class RegisterFile(CPUElement):
         CPUElement.connect(self, inputSources,
                            outputValueNames, control, outputSignalNames)
 
-        assert(len(inputSources) == 3),         'registerFile should have 3 inputs'
+        assert(len(inputSources) == 4),         'registerFile should have 4 inputs'
         assert(len(outputValueNames) == 2),     'registerFile should have 2 outputs'
         assert(len(control) == 1),              'registerFile should only have 1 control input'
         assert(len(outputSignalNames) == 0),    'registerFile does not have any control signal output'
 
-        self.inputIM = inputSources[0][1]
-        self.inputMuxIM = inputSources[1][1]
-        self.inputMuxDM = inputSources[2][1] # Unsure how to do this excactly, the register file technically has to run twice now since the write data happens at the end of the path
+        self.rs = inputSources[0][1]
+        self.rt = inputSources[1][1]
+        self.inputMuxIM = inputSources[2][1]
+        self.inputMuxDM = inputSources[3][1] # Unsure how to do this excactly, the register file technically has to run twice now since the write data happens at the end of the path
 
         self.controlName = control[0][1]
         self.readData1 = outputValueNames[0]
@@ -52,30 +53,14 @@ class RegisterFile(CPUElement):
         print("================")
         print()
         print()
-        
-        '''test for checking where the respective signals are found'''
-        # value = 1829511764
-
-        # binStr = f'{value:032b}'
-    
-        # test1 = binStr[6:11]
-        # test2 = binStr[11:16]
-        # test3 = binStr[16:21]
-
-        # print("binStr: " + binStr)
-        # print("25-21: " + test1)
-        # print("20-16: " + test2)
-        # print("15-11: " + test3)
 
     def writeOutput(self):
-        binStr = f'{self.inputValues[self.inputIM]:032b}'
         controlSignal = self.controlSignals[self.controlName]
 
-        print("input binStr: ", binStr)
-        print("control signal: ", controlSignal)
+        rr1 = self.inputValues[self.rs]
+        rr2 = self.inputValues[self.rt]
 
-        rr1 = int(binStr[6:11], 2)
-        rr2 = int(binStr[11:16], 2)
+        print("control signal: ", controlSignal)
 
         print(f'read register {rr1} and {rr2}')
 
@@ -99,12 +84,12 @@ class TestRegisterFile(unittest.TestCase):
 
         self.testInput.connect(
             [],
-            ['IM', 'MUX', 'DM'],
+            ['RS', 'RT', 'MUX', 'DM'],
             [],
             ['regWrite']
         )
         self.registerFile.connect(
-            [(self.testInput, 'IM'), (self.testInput, 'MUX'), (self.testInput, 'DM')],
+            [(self.testInput, 'RS'), (self.testInput, 'RT'), (self.testInput, 'MUX'), (self.testInput, 'DM')],
             ['rd1', 'rd2'],
             [(self.testInput, 'regWrite')],
             []
@@ -117,11 +102,12 @@ class TestRegisterFile(unittest.TestCase):
         )
     # latex article class: "ieetran"?
 
-    def test_correct_behavior(self):
+    def test_correct_behaviour(self):
         print("========READ REGISTER========")
         self.registerFile.register[2] = 21
         self.registerFile.register[4] = 69
-        self.testInput.setOutputValue('IM', 4464894)
+        self.testInput.setOutputValue('RS', 2)
+        self.testInput.setOutputValue('RT', 4)
         self.testInput.setOutputValue('MUX', 9)
         self.testInput.setControlSignals('regWrite', 0)
         
@@ -138,8 +124,8 @@ class TestRegisterFile(unittest.TestCase):
         print("========READ REGISTER========")
         self.registerFile.register[2] = 80085
         self.registerFile.register[4] = 420
-        self.testInput.setOutputValue('IM', 4464894)
-        self.testInput.setOutputValue('MUX', 9)
+        self.testInput.setOutputValue('RS', 2)
+        self.testInput.setOutputValue('RT', 4)
         self.testInput.setOutputValue('DM', 1337)
         self.testInput.setControlSignals('regWrite', 1)
 

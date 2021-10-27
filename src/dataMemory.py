@@ -67,7 +67,7 @@ class TestDataMemory(unittest.TestCase):
             []
         )
 
-    def test_correct_behavior(self):
+    def test_correct_behaviour(self):
         print("========START========")
         self.testInput.setOutputValue('address', 266481593)
         self.testInput.setOutputValue('writeData', 102)

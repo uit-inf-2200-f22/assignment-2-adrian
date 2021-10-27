@@ -15,6 +15,7 @@ from alu import Alu, TestAlu
 from aluControl import AluControl, TestAluControl
 from signExtend import SignExtend, TestSignExtend
 from memory import Memory, TestMemory
+from pcJump import pcJump, TestPcJump
 
 class MIPSSimulator():
     '''Main class for MIPS pipeline simulator.
@@ -46,49 +47,54 @@ class MIPSSimulator():
         self._connectCPUElements()
 
         '''INSTRUCTION MEMORY TEST'''
-        # self.testIM = TestInstructionMemory()
-        # self.testIM.setUp(memoryFile)
-        # self.testIM.test_correct_behavior()
+        self.testIM = TestInstructionMemory()
+        self.testIM.setUp(memoryFile)
+        self.testIM.test_correct_behaviour()
 
         '''SIGN EXTEND TEST'''
-        # self.testSignExtend = TestSignExtend()
-        # self.testSignExtend.setUp()
-        # self.testSignExtend.test_correct_behavior()
+        self.testSignExtend = TestSignExtend()
+        self.testSignExtend.setUp()
+        self.testSignExtend.test_correct_behaviour()
 
         '''ALUCONTROL TEST'''
-        # self.testAluControl = TestAluControl()
-        # self.testAluControl.setUp()        
-        # self.testAluControl.test_correct_behavior()
+        self.testAluControl = TestAluControl()
+        self.testAluControl.setUp()        
+        self.testAluControl.test_correct_behaviour()
 
         '''ALU TEST'''
-        # self.testAlu = TestAlu()
-        # self.testAlu.setUp()
-        # self.testAlu.test_correct_behavior()
+        self.testAlu = TestAlu()
+        self.testAlu.setUp()
+        self.testAlu.test_correct_behaviour()
 
         '''CONTROL TEST'''
-        # self.testControl = TestControl()
-        # self.testControl.setUp()
-        # self.testControl.test_correct_behavior()
+        self.testControl = TestControl()
+        self.testControl.setUp()
+        self.testControl.test_correct_behaviour()
 
         '''DATAMEMORY TEST'''
-        # self.testDataMemory = TestDataMemory()
-        # self.testDataMemory.setUp(memoryFile)
-        # self.testDataMemory.test_correct_behavior()
+        self.testDataMemory = TestDataMemory()
+        self.testDataMemory.setUp(memoryFile)
+        self.testDataMemory.test_correct_behaviour()
 
         '''REGISTER FILE TEST'''
-        # self.testRegisterFile = TestRegisterFile()
-        # self.testRegisterFile.setUp()
-        # self.testRegisterFile.test_correct_behavior()
+        self.testRegisterFile = TestRegisterFile()
+        self.testRegisterFile.setUp()
+        self.testRegisterFile.test_correct_behaviour()
 
         '''MEMORY TEST'''
-        # self.memory = TestMemory()
-        # self.memory.setUp(memoryFile)
-        # self.memory.test_correct_behavior()
+        self.memory = TestMemory()
+        self.memory.setUp(memoryFile)
+        self.memory.test_correct_behaviour()
 
         '''REGISTER FILE TEST'''
         self.registerFile = TestRegisterFile()
         self.registerFile.setUp()
-        self.registerFile.test_correct_behavior()
+        self.registerFile.test_correct_behaviour()
+
+        '''PCJUMP TEST'''
+        self.pcJump = TestPcJump()
+        self.pcJump.setUp()
+        self.pcJump.test_correct_behaviour()
 
     def _connectCPUElements(self):
         self.constant3.connect(
@@ -142,7 +148,7 @@ class MIPSSimulator():
 
         self.instructionMemory.connect(
             [(self.pc, 'address')],
-            ['instruction'],
+            ['shiftLeftTwo', 'control', 'rt', 'rs', 'muxZero', 'muxOne', 'signExtend', 'aluControl'],
             [],
             []
         )

@@ -16,22 +16,47 @@ class InstructionMemory(Memory):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
         
         assert (len(inputSources) == 1), 'Instruction memory should only have 1 input'
-        assert (len(outputValueNames) == 1), 'Instruction memory should only have 1 output'
+        assert (len(outputValueNames) == 8), 'Instruction memory should have 8 outputs'
         assert(len(control) == 0), 'Instruction memory should not have control input'
         assert (len(outputSignalNames) == 0), 'Instruction memory should not have any control outputs'
 
-        self.inputName = inputSources[0][1]
-        self.outputName = outputValueNames[0]
         self.memory = self.memory
+        self.inputName = inputSources[0][1]
+        self.shiftLeftTwo = outputValueNames[0]
+        self.control = outputValueNames[1]
+        self.rs = outputValueNames[2]
+        self.rt = outputValueNames[3]
+        self.muxZero = outputValueNames[4]
+        self.muxOne = outputValueNames[5]
+        self.signExtend = outputValueNames[6]
+        self.aluControl = outputValueNames[7]
     
     def writeOutput(self):
         
-        self.outputValues[self.outputName] = self.inputValues[self.inputName]   # Med antalgelse at instructionMemory.readInput() blir kjørt før dette, kan outputValues dictionariet få en key self.inputname, med verdi som ligger mappet til self.inputName i self.inputValues.
+        instruction = f'{self.memory[self.inputValues[self.inputName]]:032b}'
 
+        shiftLeftTwo = instruction[6:32]
+        control = instruction[0:6]
+        rs = instruction[6:11]
+        rt = instruction[11:16]
+        muxZero = instruction[11:16]
+        muxOne = instruction[16:21]
+        signExtend = instruction[16:32]
+        aluControl = instruction[26:32]
+
+        self.outputValues[self.shiftLeftTwo] = int(shiftLeftTwo,2)
+        self.outputValues[self.control] = int(control,2)
+        self.outputValues[self.rs] = int(rs,2)
+        self.outputValues[self.rt] = int(rt,2)
+        self.outputValues[self.muxZero] = int(muxZero,2)
+        self.outputValues[self.muxOne] = int(muxOne,2)
+        self.outputValues[self.signExtend] = int(signExtend,2)
+        self.outputValues[self.aluControl] = int(aluControl,2)
+        
 
 class TestInstructionMemory(unittest.TestCase):
     def setUp(self, memoryFile):
-        self.instructionMem = InstructionMemory(memoryFile)
+        self.IM = InstructionMemory(memoryFile)
         self.testInput = TestElement()
         self.testOutput = TestElement()
 
@@ -41,33 +66,51 @@ class TestInstructionMemory(unittest.TestCase):
             [],
             []
         )
-        self.instructionMem.connect(
+        self.IM.connect(
             [(self.testInput, 'address')],
-            ['instruction'],
+            ['shiftLeftTwo', 'control', 'rs', 'rt', 'muxZero', 'muxOne', 'signExtend', 'aluControl'],
             [],
             []
         )
         self.testOutput.connect(
-            [(self.instructionMem, 'instruction')],
+            [(self.IM, 'shiftLeftTwo'), (self.IM, 'control'), (self.IM, 'rt'), (self.IM, 'rs'), (self.IM, 'muxZero'), (self.IM, 'muxOne'), (self.IM, 'signExtend'), (self.IM, 'aluControl')],
             [],
             [],
             []
         )
 
     def test_correct_behaviour(self):
+        
+        self.IM.memory[2820997123] = 2888105987
 
-        self.testInput.setOutputValue('address', 1918171615)
+        self.testInput.setOutputValue('address', 2820997123)
 
-        self.instructionMem.readInput()
-        self.instructionMem.writeOutput()
+        self.IM.readInput()
+        self.IM.writeOutput()
         self.testOutput.readInput()
-        output = self.testOutput.inputValues['instruction']
 
-        self.assertEqual(output, 1918171615)
+        print(f'instruction: {2888105987:032b}')
 
-        # bare for en kjapp print confirmation
-        if output == 1918171615:
-            print("success!")
-            return 0
-        
-        
+        shiftLeftTwo = self.testOutput.inputValues['shiftLeftTwo']
+        print(f'shiftLeftTwo: {shiftLeftTwo}')
+
+        control = self.testOutput.inputValues['control']
+        print(f'control: {control}')
+
+        rs = self.testOutput.inputValues['rs']
+        print(f'rt: {rs}')
+
+        rt = self.testOutput.inputValues['rt']
+        print(f'rs: {rt}')
+
+        muxZero = self.testOutput.inputValues['muxZero']
+        print(f'muxZero: {muxZero}')
+
+        muxOne = self.testOutput.inputValues['muxOne']
+        print(f'muxOne: {muxOne}')
+
+        signExtend = self.testOutput.inputValues['signExtend']
+        print(f'signExtend: {signExtend}')
+
+        aluControl = self.testOutput.inputValues['aluControl']
+        print(f'aluControl: {aluControl}')

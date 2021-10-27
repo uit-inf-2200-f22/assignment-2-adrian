@@ -34,10 +34,8 @@ class Control(CPUElement):
 
     def setControlSignals(self):
 
-        signal = self.inputValues[self.inputName]
-        
-        binStr = f'{signal:032b}'
-        signalValue = int(binStr[0:6], 2)
+        signalValue = self.inputValues[self.inputName]
+    
         print("input signal value: ", signalValue)
         # if the opcode is all zeros, aka has the value zero, R-format is detected
         '''R-FORMAT INSTRUCTIONS'''
@@ -64,10 +62,11 @@ class Control(CPUElement):
             self.outputControlSignals[self.memRead] = 0
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
-            self.outputControlSignals[self.ALUOp] = 0
+            self.outputControlSignals[self.ALUOp] = 0   
 
             self.outputControlSignals[self.jump] = 0
 
+        # addi and addiu are treated as the same
         if signalValue == 8:
             print("addi detected")
             self.outputControlSignals[self.regDst] = 0
@@ -81,7 +80,7 @@ class Control(CPUElement):
 
             self.outputControlSignals[self.jump] = 0
 
-        if signalValue == 9:    # in the acutal binary code, 37, or 100101 is given for addiu, might have to do 2 checks for addiu
+        if signalValue == 9:
             print("addiu detected")
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 1
@@ -143,7 +142,7 @@ class Control(CPUElement):
             self.outputControlSignals[self.memRead] = 0
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
-            self.outputControlSignals[self.ALUOp] = 0
+            self.outputControlSignals[self.ALUOp] = 1
 
             self.outputControlSignals[self.jump] = 1
 
@@ -172,42 +171,42 @@ class TestControl(unittest.TestCase):
             []
         )
 
-    def test_correct_behavior(self):
+    def test_correct_behaviour(self):
         print("=========R-FORMAT=========")
-        print("binary input: " + f'{36231392:032b}')
-        self.testInput.setOutputValue('controlSignal', int(f'{36231392:032b}', 2))
+        print("binary input: " + f'{36231392:032b}'[0:6])
+        self.testInput.setOutputValue('controlSignal', int(f'{36231392:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
         print("==========================")
 
         print("=========LOAD WORD========")
-        print("binary input: " + f'{2385041632:032b}')
-        self.testInput.setOutputValue('controlSignal', int(f'{2385041632:032b}', 2))
+        print("binary input: " + f'{2385041632:032b}'[0:6])
+        self.testInput.setOutputValue('controlSignal', int(f'{2385041632:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
         print("==========================")
 
         print("========STORE WORD========")
-        print("binary input: " + f'{2921912544:032b}')
-        self.testInput.setOutputValue('controlSignal', int(f'{2921912544:032b}', 2))
+        print("binary input: " + f'{2921912544:032b}'[0:6])
+        self.testInput.setOutputValue('controlSignal', int(f'{2921912544:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
         print("==========================")
 
         print("======BRANCH ON EQUAL=====")
-        print("binary input: " + f'{304666848:032b}')
-        self.testInput.setOutputValue('controlSignal', int(f'{304666848:032b}', 2))
+        print("binary input: " + f'{304666848:032b}'[0:6])
+        self.testInput.setOutputValue('controlSignal', int(f'{304666848:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
         print("==========================")
 
         print("====BRANCH ON NOT EQUAL===")
-        print("binary input: " + f'{304666848:032b}')
-        self.testInput.setOutputValue('controlSignal', int(f'{304666848:032b}', 2))
+        print("binary input: " + f'{304666848:032b}'[0:6])
+        self.testInput.setOutputValue('controlSignal', int(f'{304666848:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
