@@ -25,23 +25,23 @@ class AluControl(CPUElement):
     def setControlSignals(self): 
         controlSignal = self.controlSignals[self.controlName]
         ctrlStr = f'{controlSignal:02b}'
-
+        print("Writing control output for aluControl...")
         signal = self.inputValues[self.inputName]        
         binStr = f'{signal:06b}'
         
         # Only the 4 last bits in the func field are relevant
-        signalValue = binStr[2:6]
+        signalValue = int(binStr[2:6],2)
         print("signalValue is: ", signalValue)
         print("aluOP is: ", ctrlStr)
 
         if controlSignal == 0:
             print("I-instruction detected...")
-            print("add...")
+            print("adding...")
             self.outputControlSignals[self.outputSignalName] = 2
-        
+
         if ctrlStr[0] == '0':
             print("branch on equal operation detected...")
-            print("sub...")
+            print("subtracting...")
             self.outputControlSignals[self.outputSignalName] = 6
         
         if ctrlStr[0] == '1':
@@ -73,7 +73,7 @@ class AluControl(CPUElement):
             if signalValue == 13:
                 print("break deteced")
                 raise Break("break instruction detected")
-        print("output value set!")
+        print("output value set!\n")
 
 class TestAluControl(unittest.TestCase):
     def setUp(self):

@@ -18,6 +18,7 @@ class ShiftLeftTwo(CPUElement):
         self.outputName = outputValueNames[0]
 
     def writeOutput(self):
+        print("Writing output for shiftLeftTwo...")
         output = self.inputValues[self.inputName] * 4
 
         self.outputValues[self.outputName] = output

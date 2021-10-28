@@ -26,8 +26,9 @@ class SignExtend(CPUElement):
         # binStr now contains a string of binary code, that should e extended, reads the first bit and calculates accordingly
         # the binStrings are indexed from the top, meaning binStr[0] is the 16th bit.
         binStr = f'{signal:016b}'
-        
+        print("Writing output for signExtend...")
         print("input binary string", binStr)
+        print("")
         i = 0
         newString = ""                                  # Since adding characters at the start of a string in python
         if binStr[0] == "1":

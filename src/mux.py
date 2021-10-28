@@ -28,16 +28,20 @@ class Mux(CPUElement):
 
     def writeOutput(self):
         muxControl = self.controlSignals[self.controlName]
-        
+        print("Writing output for MUX...")
+        print(f'control signal: {muxControl}')
         assert(isinstance(muxControl, int))
         assert(not isinstance(muxControl, bool))  # ...  (not bool)
         assert(muxControl == 0 or muxControl == 1), 'Invalid mux control signal value: %d' % (muxControl,)
         
+        print(f'input 0 {self.inputValues[self.inputZero]}')
+        print(f'input 1 {self.inputValues[self.inputOne]}')
+
         if muxControl == 0:
-            print("input from zero: ",self.inputValues[self.inputZero])
+            print("outputting 0\n")
             self.outputValues[self.outputName] = self.inputValues[self.inputZero]
         else:
-            print("input from one: ",self.inputValues[self.inputOne])
+            print("outputting 1\n")
             self.outputValues[self.outputName] = self.inputValues[self.inputOne]
     
     def printOutput(self):

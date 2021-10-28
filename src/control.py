@@ -27,7 +27,7 @@ class Control(CPUElement):
         self.memWrite = outputSignalNames[5]
         self.branch = outputSignalNames[6]
         self.ALUOp = outputSignalNames[7]
-        self.jump = outputSignalNames[1]
+        self.jump = outputSignalNames[8]
         self.bne = outputSignalNames[9]
 
     def writeOutput(self):
@@ -36,7 +36,7 @@ class Control(CPUElement):
     def setControlSignals(self):
 
         signalValue = self.inputValues[self.inputName]
-    
+        print("Writing control output for control unit...")
         print("input signal value: ", signalValue)
         # if the opcode is all zeros, aka has the value zero, R-format is detected
         '''R-FORMAT INSTRUCTIONS'''
@@ -159,6 +159,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.ALUOp] = 1
             self.outputControlSignals[self.jump] = 1
             self.outputControlSignals[self.bne] = 0
+            print(f'jump signal: {self.outputControlSignals[self.jump]}')
+        print("")
 
 class TestControl(unittest.TestCase):
     def setUp(self):

@@ -32,11 +32,12 @@ class InstructionMemory(Memory):
         self.aluControl = outputValueNames[7]
     
     def writeOutput(self):
-        
+        print("Writing output for IM...")
         print("tryint to access: ", self.inputValues[self.inputName])
-        print(self.memory)
+        print("\nmemory:")
+        print(self.memory, "\n")
         instruction = f'{self.memory[self.inputValues[self.inputName]]:032b}'
-        print("instruction: " + instruction)
+        print(f'instruction: {instruction}\n')
 
         shiftLeftTwo = instruction[6:32]
         control = instruction[0:6]

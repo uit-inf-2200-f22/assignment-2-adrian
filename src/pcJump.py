@@ -21,10 +21,12 @@ class PcJump(CPUElement):
         self.jumpAddress = outputValueNames[0]
 
     def writeOutput(self):
+        print("Writing output for pcJump...")
         dataA = f'{self.inputValues[self.lstInput]:028b}'
         dataB = f'{self.inputValues[self.adderInput]:032b}'[0:4]    # compressed way to get the first(last) 4 bits in the add
         print("jumping to: ", int(dataB + dataA,2))
         self.outputValues[self.jumpAddress] = int(dataB + dataA,2)
+        print("")
 
 class TestPcJump(unittest.TestCase):
     def setUp(self):

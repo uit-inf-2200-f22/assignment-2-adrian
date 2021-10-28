@@ -24,10 +24,10 @@ class And(CPUElement):
     def setControlSignals(self):     
         control = self.controlSignals[self.controlInput] 
         zero = self.controlSignals[self.zeroControl]
-
+        print("Writing control output for andGate...")
         if control == 1 and zero == 1:
-            print("AND GATE output: 1")
+            print("AND GATE output: 1\n")
             self.outputControlSignals[self.signalName] = 1
         else:
-            print("AND GATE output: 0")
+            print("AND GATE output: 0\n")
             self.outputControlSignals[self.signalName] = 0

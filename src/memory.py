@@ -41,7 +41,7 @@ class Memory(CPUElement):
             if line[0] == '#':
                 continue
             line = line.split("\t")
-            # print(f'address: {int(line[0], 16)}')
+            print(f'address: {int(line[0], 16)}')
             address.append(int(line[0], 16))
             instruction.append(int(line[1], 16))
 

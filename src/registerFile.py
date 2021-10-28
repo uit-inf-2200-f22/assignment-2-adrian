@@ -55,6 +55,8 @@ class RegisterFile(CPUElement):
         print()
 
     def writeOutput(self):
+        print("Writing output for registers...")
+        print("")
         controlSignal = self.controlSignals[self.controlName]
 
         rr1 = self.inputValues[self.rs]

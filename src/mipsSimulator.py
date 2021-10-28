@@ -214,7 +214,7 @@ class MIPSSimulator():
         )
 
         self.pcIncOrBranchMux.connect(
-            [(self.addBranch, 'branchAdd'), (self.addPC, 'pcIncrement')],
+            [(self.addPC, 'pcIncrement'), (self.addBranch, 'branchAdd')],
             ['pcBranchOutput'],
             [(self.andGate, 'branch')],
             [],
@@ -310,12 +310,12 @@ class MIPSSimulator():
 
         # self.pc.writeOutput()
 
+        print(f'===========CYCLE {self.nCycles}===========')
         for elem in self.elements:
-            print(self.nCycles)
             elem.readControlSignals()
             elem.readInput()
             elem.writeOutput()
             elem.setControlSignals()
         self.registerFile.readInput()
-
+        print(f'==========================================')
         # self.pc.readInput()

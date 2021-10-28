@@ -29,4 +29,5 @@ class Constant(CPUElement):
         self.outputName = outputValueNames[0]
 
     def writeOutput(self):
+        print("Writing output for constant...\n")
         self.outputValues[self.outputName] = self.constantValue

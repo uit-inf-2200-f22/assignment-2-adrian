@@ -24,3 +24,4 @@ class Add(CPUElement):
             total_sum += self.inputValues[k]
 
         self.outputValues[self.outputName] = total_sum & 0xffffffff  # Convert to 32-bit (ignore overflow)
+        print(f'add result: {self.outputValues[self.outputName]}\n')

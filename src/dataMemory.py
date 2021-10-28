@@ -29,7 +29,7 @@ class DataMemory(Memory):
         self.writeData = inputSources[1][1]
         
     def writeOutput(self):
-
+        print("Writing output for dataMemory...\n")
         memReadControl = self.controlSignals[self.memRead]
         memWriteControl = self.controlSignals[self.memWrite]
 

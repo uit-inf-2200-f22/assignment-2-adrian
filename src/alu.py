@@ -25,7 +25,7 @@ class Alu(CPUElement):
     def writeOutput(self):
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]
-
+        print("Writing output for ALU...")
         controlSignal = self.controlSignals[self.controlInputName]
 
         if controlSignal == 2:
@@ -86,8 +86,10 @@ class Alu(CPUElement):
                 self.outputValues[self.outputName] = 0
         else:
             print("no valid control signal given")
+        print("")
 
     def setControlSignals(self):
+        print("Writing control output for ALU...\n")
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]
         result = readData1 - muxDecision
