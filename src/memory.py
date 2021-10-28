@@ -35,13 +35,16 @@ class Memory(CPUElement):
         address = []
         instruction = []
 
+        for line in mem:
+            print(line)
+
         # Loops through each line in the mem lists, adds every word, separated by a tab, into a new list
         # which is then added to its respective list.
         for line in mem:
-            if line[0] == '#':
+            if line[0] == '#' or line[0] == "\n":
                 continue
             line = line.split("\t")
-            print(f'address: {int(line[0], 16)}')
+            print(f'address: {line[0]}')
             address.append(int(line[0], 16))
             instruction.append(int(line[1], 16))
 
