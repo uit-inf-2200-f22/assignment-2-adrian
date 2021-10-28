@@ -4,7 +4,7 @@ Implements a CPU element for shifting a number two bits to the left
 from cpuElement import CPUElement
 import common
 
-class shiftLeftTwo(CPUElement):
+class ShiftLeftTwo(CPUElement):
 
     def connect(self, inputSource, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSource, outputValueNames, control, outputSignalNames)
@@ -14,7 +14,7 @@ class shiftLeftTwo(CPUElement):
         assert(len(control) == 0),              'shiftLeftTwo has no control signal'
         assert(len(outputSignalNames) == 0),    'ShiftLeftTwo should not have an output control signal' 
 
-        self.inputName = input[0][1]
+        self.inputName = inputSource[0][1]
         self.outputName = outputValueNames[0]
 
     def writeOutput(self):

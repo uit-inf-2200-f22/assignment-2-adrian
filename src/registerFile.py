@@ -60,20 +60,12 @@ class RegisterFile(CPUElement):
         rr1 = self.inputValues[self.rs]
         rr2 = self.inputValues[self.rt]
 
-        print("control signal: ", controlSignal)
-
-        print(f'read register {rr1} and {rr2}')
-
         wr = self.inputValues[self.inputMuxIM]
-        
-        print(f'value in {rr1}: {self.register[rr1]}')
-        print(f'value in {rr2}: {self.register[rr2]}')
 
         self.outputValues[self.readData1] = self.register[rr1]
         self.outputValues[self.readData2] = self.register[rr2]
         
         if controlSignal == 1:
-            print(f'writing {self.inputValues[self.inputMuxDM]} to register {wr}')
             self.register[wr] = self.inputValues[self.inputMuxDM]
 
 class TestRegisterFile(unittest.TestCase):
@@ -84,12 +76,12 @@ class TestRegisterFile(unittest.TestCase):
 
         self.testInput.connect(
             [],
-            ['RS', 'RT', 'MUX', 'DM'],
+            ['RS', 'RT', 'RD', 'DM'],
             [],
             ['regWrite']
         )
         self.registerFile.connect(
-            [(self.testInput, 'RS'), (self.testInput, 'RT'), (self.testInput, 'MUX'), (self.testInput, 'DM')],
+            [(self.testInput, 'RS'), (self.testInput, 'RT'), (self.testInput, 'RD'), (self.testInput, 'DM')],
             ['rd1', 'rd2'],
             [(self.testInput, 'regWrite')],
             []
@@ -103,12 +95,15 @@ class TestRegisterFile(unittest.TestCase):
     # latex article class: "ieetran"?
 
     def test_correct_behaviour(self):
-        print("========READ REGISTER========")
+        print("========TESTING REG=======")
+        print("WRITE REG...")
+        print("reg 2 & 4: 21 & 69")
+        print("regWrite: 0")
         self.registerFile.register[2] = 21
         self.registerFile.register[4] = 69
         self.testInput.setOutputValue('RS', 2)
         self.testInput.setOutputValue('RT', 4)
-        self.testInput.setOutputValue('MUX', 9)
+        self.testInput.setOutputValue('RD', 9)
         self.testInput.setControlSignals('regWrite', 0)
         
         self.registerFile.readInput()
@@ -119,13 +114,17 @@ class TestRegisterFile(unittest.TestCase):
         op1, op2 =self.testOutput.inputValues['rd1'], self.testOutput.inputValues['rd2']
 
         print(f'output: {op1} {op2}')
-        print("=============================")
+        print("")
 
-        print("========READ REGISTER========")
+        print("READ REG...")
+        print("reg 2 & 4: 80085 & 420")
+        print("dm input value: 1337")
+        print("regWrite: 1")
         self.registerFile.register[2] = 80085
         self.registerFile.register[4] = 420
         self.testInput.setOutputValue('RS', 2)
         self.testInput.setOutputValue('RT', 4)
+        self.testInput.setOutputValue('RD', 9)
         self.testInput.setOutputValue('DM', 1337)
         self.testInput.setControlSignals('regWrite', 1)
 
@@ -134,7 +133,7 @@ class TestRegisterFile(unittest.TestCase):
         self.registerFile.writeOutput()
         
         print(f'register 9 now contains: {self.registerFile.register[9]}')
-        print("=============================")
+        print("==========================\n")
 
 if __name__ == '__main__':
     unittest.main()

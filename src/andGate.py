@@ -14,15 +14,20 @@ class And(CPUElement):
         assert(len(control) == 2),              'And gate has 2 control inputs'
         assert(len(outputSignalNames) == 1),    'And gate has 1 control signal output'
 
-        self.controlInput = inputSources[0][1]
-        self.zeroControl = inputSources[1][1]
+        self.controlInput = control[0][1]
+        self.zeroControl = control[1][1]
         self.signalName = outputSignalNames[0]
+
+    def writeOutput(self):
+        self.outputValues['none'] = 0
 
     def setControlSignals(self):     
         control = self.controlSignals[self.controlInput] 
         zero = self.controlSignals[self.zeroControl]
 
         if control == 1 and zero == 1:
+            print("AND GATE output: 1")
             self.outputControlSignals[self.signalName] = 1
         else:
+            print("AND GATE output: 0")
             self.outputControlSignals[self.signalName] = 0

@@ -26,33 +26,26 @@ class SignExtend(CPUElement):
         # binStr now contains a string of binary code, that should e extended, reads the first bit and calculates accordingly
         # the binStrings are indexed from the top, meaning binStr[0] is the 16th bit.
         binStr = f'{signal:016b}'
-        print("=======STARTING=======")
+        
         print("input binary string", binStr)
         i = 0
         newString = ""                                  # Since adding characters at the start of a string in python
         if binStr[0] == "1":
+            unsigned = False
             while i <= 15:
                 newString += "1"
                 i += 1
         else:
+            unsigned = True
             while i <= 15:
                 newString += "0"
-                print("extending sign... " + newString)
                 i += 1
-        print("before: ", newString)
-        newString += binStr[16:32]
-        print("after: ", newString)
-        print("this is inputStr : " + binStr)
-        print("this is newString: " + newString)
+        newString += binStr
 
-        print("converting to decimal...")
-
-        output = fromUnsignedWordToSignedWord(int(newString, 2))
-        
-        print("this is output: ", output)
-        
-        print("=======RETURNING=======")
-        self.outputValues[self.outputName] = output
+        if not unsigned:
+            self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(newString, 2))       
+        else:
+            self.outputValues[self.outputName] = int(newString, 2)
 
 
 class TestSignExtend(unittest.TestCase):
@@ -82,7 +75,9 @@ class TestSignExtend(unittest.TestCase):
 
     def test_correct_behaviour(self):
         
-        self.testInput.setOutputValue('signal', 596443135)
+        print("========TESTING SE========")
+        print("'negative' value...")
+        self.testInput.setOutputValue('signal', 65278)
         
         self.signExtend.readInput()
         self.signExtend.writeOutput()
@@ -90,4 +85,25 @@ class TestSignExtend(unittest.TestCase):
 
         output = self.testOutput.inputValues['signExtended']
 
-        print(output)
+        print(f'output: {output}')
+        if output == -258:
+            print("SUCCESS!")
+        else:
+            print("FAILED!")
+        print("")
+        print("'positive' value...")
+
+        self.testInput.setOutputValue('signal', 32767)
+        
+        self.signExtend.readInput()
+        self.signExtend.writeOutput()
+        self.testOutput.readInput()
+
+        output = self.testOutput.inputValues['signExtended']
+
+        print(f'output: {output}')
+        if output == 32767:
+            print("SUCCESS!")
+        else:
+            print("FAILED!")
+        print("==========================\n")

@@ -41,6 +41,7 @@ class Memory(CPUElement):
             if line[0] == '#':
                 continue
             line = line.split("\t")
+            # print(f'address: {int(line[0], 16)}')
             address.append(int(line[0], 16))
             instruction.append(int(line[1], 16))
 
@@ -60,5 +61,7 @@ class TestMemory(unittest.TestCase):
         self.memory = Memory(file)
 
     def test_correct_behaviour(self):
+        print("========TESTING MEM=======")
         for i in self.memory.memory:
             print(f'{i} : {self.memory.memory[i]} \t {self.memory.memory[i]:032b}')
+        print("==========================\n")

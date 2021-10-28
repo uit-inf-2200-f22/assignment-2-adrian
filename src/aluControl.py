@@ -4,6 +4,7 @@ Implements an alu (arithemtic logic unit) control unit for controling the alu
 import unittest
 from cpuElement import CPUElement
 from testElement import TestElement
+from common import Break
 
 class AluControl(CPUElement):
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
@@ -18,6 +19,9 @@ class AluControl(CPUElement):
         self.inputName = inputSources[0][1]
         self.outputSignalName = outputSignalNames[0]
 
+    def writeOutput(self):
+        self.outputValues['none'] = 0
+
     def setControlSignals(self): 
         controlSignal = self.controlSignals[self.controlName]
         ctrlStr = f'{controlSignal:02b}'
@@ -28,9 +32,6 @@ class AluControl(CPUElement):
         # Only the 4 last bits in the func field are relevant
         signalValue = binStr[2:6]
         print("signalValue is: ", signalValue)
-        # print(f'binary: {signalValue:04b}')
-
-        print("checking aluOP signal...")
         print("aluOP is: ", ctrlStr)
 
         if controlSignal == 0:
@@ -50,22 +51,28 @@ class AluControl(CPUElement):
                 self.outputControlSignals[self.outputSignalName] = 2
             if signalValue == 1:
                 print("addu detected...")
-                self.outputControlSignals[self.outputSignalName] = 3        # There does not seem to be any official aluOperation output matchin a addu, so 3 is arbitrarily chosen here
+                self.outputControlSignals[self.outputSignalName] = 3        # There does not seem to be any official aluOperation output matchin a addu, so 3 is arbitrarily chosen here, it seems...
             if signalValue == 2:
                 print("sub detected...")
                 self.outputControlSignals[self.outputSignalName] = 6
             if signalValue == 3:
                 print("subu detected...")
-                self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here
+                self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here, i think atleast...
             if signalValue == 4:
                 print("and detected...")
                 self.outputControlSignals[self.outputSignalName] = 0
             if signalValue == 5:
                 print("or detected...")
                 self.outputControlSignals[self.outputSignalName] = 1
+            if signalValue == 7:
+                print("nor detected...")
+                self.outputControlSignals[self.outputSignalName] = 5
             if signalValue == 10:
                 print("set on less than detected...")
                 self.outputControlSignals[self.outputSignalName] = 7
+            if signalValue == 13:
+                print("break deteced")
+                raise Break("break instruction detected")
         print("output value set!")
 
 class TestAluControl(unittest.TestCase):
@@ -94,7 +101,7 @@ class TestAluControl(unittest.TestCase):
         )
     
     def test_correct_behaviour(self):
-        print("========START========")
+        print("=======TEST ALUCTRL=======")
         self.testInput.setOutputValue('signal', int('000001', 2))
         self.testInput.setControlSignals('controlSignal', 2)
 
@@ -104,6 +111,6 @@ class TestAluControl(unittest.TestCase):
 
         self.testOutput.readControlSignals()
 
-        output = self.testOutput.controlSignals['aluControl']
-        print("output: ", output)
-        print("--------STOP--------")
+        control = self.testOutput.controlSignals['aluControl']
+        print("ctrl output: ", control)
+        print("==========================\n")

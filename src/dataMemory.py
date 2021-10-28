@@ -21,7 +21,7 @@ class DataMemory(Memory):
         assert(len(control) == 2),              'Datamemory should have 2 control signal inputs'
         assert(len(outputSignalNames) == 0),    'Datamemory should not have any control output'
 
-        self.memory = {266481593: 95}
+        self.memory = self.memory
         self.memWrite = control[0][1]           # self.memWrite inneholder nå navnet til memory write keyen
         self.memRead = control[1][1]            # self.memRead inneholder nå navnet til memory read keyen
         self.outputName = outputValueNames[0]   # self.outputName inneholder nå navnet på verdien som skal ut av memory
@@ -32,15 +32,12 @@ class DataMemory(Memory):
 
         memReadControl = self.controlSignals[self.memRead]
         memWriteControl = self.controlSignals[self.memWrite]
-        print("control signals", memReadControl, memWriteControl)
 
         if memReadControl == 1 and memWriteControl == 0:
             self.outputValues[self.outputName] = self.memory[self.inputValues[self.address]]
-            print("memRead: ", self.memory[self.inputValues[self.address]])
 
         if memWriteControl == 1 and memReadControl == 0:
             self.memory[self.address] = self.inputValues[self.writeData]
-            print("memWrite: ", self.memory[self.address])
 
 class TestDataMemory(unittest.TestCase):
     def setUp(self, memoryFile):
@@ -68,7 +65,11 @@ class TestDataMemory(unittest.TestCase):
         )
 
     def test_correct_behaviour(self):
-        print("========START========")
+        print("========TESTING DM========")
+        print("MEMREAD...")
+        print("loaded on mem: 95")
+        print("memWrite: 0\tmemRead: 1")
+        self.dataMemory.memory = {266481593 : 95}
         self.testInput.setOutputValue('address', 266481593)
         self.testInput.setOutputValue('writeData', 102)
         self.testInput.setControlSignals('memWrite', 0)
@@ -80,9 +81,11 @@ class TestDataMemory(unittest.TestCase):
 
         self.testOutput.readInput()
         print("output: ", self.testOutput.inputValues['readData'])
-        print("=====================")
-        
-        print("========START========")
+        print("")
+
+        print("MEMWRITE...")
+        print("data to write: 102")
+        print("memWrite: 1\tmemRead: 0")
         self.testInput.setOutputValue('address', 266481593)
         self.testInput.setOutputValue('writeData', 102)
         self.testInput.setControlSignals('memWrite', 1)
@@ -93,5 +96,5 @@ class TestDataMemory(unittest.TestCase):
         self.dataMemory.writeOutput()
 
         self.testOutput.readInput()
-        print("output: ", self.testOutput.inputValues['readData'])
-        print("=====================")
+        print("on address: ", self.dataMemory.memory['address'])
+        print("==========================\n")

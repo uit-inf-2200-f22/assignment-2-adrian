@@ -6,7 +6,7 @@ import unittest
 from testElement import TestElement
 from cpuElement import CPUElement
 
-class pcJump(CPUElement):
+class PcJump(CPUElement):
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
 
@@ -23,15 +23,13 @@ class pcJump(CPUElement):
     def writeOutput(self):
         dataA = f'{self.inputValues[self.lstInput]:028b}'
         dataB = f'{self.inputValues[self.adderInput]:032b}'[0:4]    # compressed way to get the first(last) 4 bits in the add
-        print(dataA)
-        print(dataB)
-        print(dataB + dataA)
+        print("jumping to: ", int(dataB + dataA,2))
         self.outputValues[self.jumpAddress] = int(dataB + dataA,2)
 
 class TestPcJump(unittest.TestCase):
     def setUp(self):
         self.testInput = TestElement()
-        self.pcJump = pcJump()
+        self.pcJump = PcJump()
         self.testOutput = TestElement()
 
         self.testInput.connect(
@@ -54,6 +52,10 @@ class TestPcJump(unittest.TestCase):
         )
 
     def test_correct_behaviour(self):
+        print("========TESTING PCJ=======")
+        print("leftshittwo input:     1010000000000000000000000000")
+        print("pc+4adder input:   11000000000000000000000000000000")
+        print("excpected result:  11001010000000000000000000000000")
         self.testInput.setOutputValue('lstInput', int('1010000000000000000000000000',2))
         self.testInput.setOutputValue('adderInput', int('11000000000000000000000000000000',2))
 
@@ -62,6 +64,7 @@ class TestPcJump(unittest.TestCase):
 
         self.testOutput.readInput()
 
-        print("output: ", self.testOutput.inputValues['jumpAddress'])
+        jumpAddress = 'jumpAddress'
+        print(f'output:            {self.testOutput.inputValues[jumpAddress]:032b}')
         assert(self.testOutput.inputValues['jumpAddress'] == int('11001010000000000000000000000000',2   )), 'output value does not mactch excpected result'
-        
+        print("=========================\n")

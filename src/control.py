@@ -15,19 +15,20 @@ class Control(CPUElement):
         assert(len(inputSources) == 1),         'Control should have 1 input'
         assert(len(outputValueNames) == 0),     'Control has no outputs'
         assert(len(control) == 0),              'Control should have no control signal inputs'
-        assert(len(outputSignalNames) == 9),    'Control should have 9 control outputs'
+        assert(len(outputSignalNames) == 10),    'Control should have 9 control outputs'
 
         self.inputName = inputSources[0][1]
 
         self.regDst = outputSignalNames[0]
+        self.ALUSrc = outputSignalNames[1]
+        self.memtoReg = outputSignalNames[2]
+        self.regWrite = outputSignalNames[3]
+        self.memRead = outputSignalNames[4]
+        self.memWrite = outputSignalNames[5]
+        self.branch = outputSignalNames[6]
+        self.ALUOp = outputSignalNames[7]
         self.jump = outputSignalNames[1]
-        self.branch = outputSignalNames[2]
-        self.memRead = outputSignalNames[3]
-        self.memtoReg = outputSignalNames[4]
-        self.ALUOp = outputSignalNames[5]
-        self.memWrite = outputSignalNames[6]
-        self.ALUSrc = outputSignalNames[7]
-        self.regWrite = outputSignalNames[8]
+        self.bne = outputSignalNames[9]
 
     def writeOutput(self):
         pass # randomControl has no data output
@@ -49,8 +50,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
             self.outputControlSignals[self.ALUOp] = 2
-
             self.outputControlSignals[self.jump] = 0
+            self.outputControlSignals[self.bne] = 0
 
         '''I-FORMAT INSTRUCTIONS'''
         if signalValue == 15:
@@ -63,8 +64,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
             self.outputControlSignals[self.ALUOp] = 0   
-
             self.outputControlSignals[self.jump] = 0
+            self.outputControlSignals[self.bne] = 0
 
         # addi and addiu are treated as the same
         if signalValue == 8:
@@ -77,8 +78,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
             self.outputControlSignals[self.ALUOp] = 0
-
             self.outputControlSignals[self.jump] = 0
+            self.outputControlSignals[self.bne] = 0
 
         if signalValue == 9:
             print("addiu detected")
@@ -90,11 +91,24 @@ class Control(CPUElement):
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
             self.outputControlSignals[self.ALUOp] = 0
-
             self.outputControlSignals[self.jump] = 0
+            self.outputControlSignals[self.bne] = 0
+
+        if signalValue == 4:
+            print("beq detected")
+            self.outputControlSignals[self.regDst] = 0
+            self.outputControlSignals[self.ALUSrc] = 1
+            self.outputControlSignals[self.memtoReg] = 0
+            self.outputControlSignals[self.regWrite] = 1
+            self.outputControlSignals[self.memRead] = 0
+            self.outputControlSignals[self.memWrite] = 0
+            self.outputControlSignals[self.branch] = 0
+            self.outputControlSignals[self.ALUOp] = 0
+            self.outputControlSignals[self.jump] = 0
+            self.outputControlSignals[self.bne] = 0
 
         if signalValue == 5:
-            print("stl detected")
+            print("bne detected")
             self.outputControlSignals[self.regDst] = 1
             self.outputControlSignals[self.ALUSrc] = 0
             self.outputControlSignals[self.memtoReg] = 0
@@ -103,8 +117,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
             self.outputControlSignals[self.ALUOp] = 0
-
             self.outputControlSignals[self.jump] = 0
+            self.outputControlSignals[self.bne] = 1
 
         if signalValue == 35:
             print("lw detected")
@@ -116,8 +130,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
             self.outputControlSignals[self.ALUOp] = 0
-
             self.outputControlSignals[self.jump] = 0
+            self.outputControlSignals[self.bne] = 0
 
         if signalValue == 43:
             print("sw detected")
@@ -129,8 +143,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.memWrite] = 1
             self.outputControlSignals[self.branch] = 0
             self.outputControlSignals[self.ALUOp] = 0
-
             self.outputControlSignals[self.jump] = 0
+            self.outputControlSignals[self.bne] = 0
 
         '''J-FORMAT INSTRUCTIONS'''
         if signalValue == 2:
@@ -143,8 +157,8 @@ class Control(CPUElement):
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 0
             self.outputControlSignals[self.ALUOp] = 1
-
             self.outputControlSignals[self.jump] = 1
+            self.outputControlSignals[self.bne] = 0
 
 class TestControl(unittest.TestCase):
     def setUp(self):
@@ -162,7 +176,7 @@ class TestControl(unittest.TestCase):
             [(self.testInput, 'controlSignal')],
             [],
             [],
-            ['regDst', 'aluSrc', 'memtoReg', 'regWrite', 'memRead', 'memWrite', 'branch', 'aluOp', 'jump']
+            ['regDst', 'aluSrc', 'memtoReg', 'regWrite', 'memRead', 'memWrite', 'branch', 'aluOp', 'jump', 'bne']
         )
         self.testOutput.connect(
             [],
@@ -172,42 +186,42 @@ class TestControl(unittest.TestCase):
         )
 
     def test_correct_behaviour(self):
-        print("=========R-FORMAT=========")
+        print("=======TESTING CTRL=======")
         print("binary input: " + f'{36231392:032b}'[0:6])
         self.testInput.setOutputValue('controlSignal', int(f'{36231392:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
-        print("==========================")
+        print("")
 
-        print("=========LOAD WORD========")
+        print("LOAD WORD...")
         print("binary input: " + f'{2385041632:032b}'[0:6])
         self.testInput.setOutputValue('controlSignal', int(f'{2385041632:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
-        print("==========================")
+        print("")
 
-        print("========STORE WORD========")
+        print("STORE WORD...")
         print("binary input: " + f'{2921912544:032b}'[0:6])
         self.testInput.setOutputValue('controlSignal', int(f'{2921912544:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
-        print("==========================")
+        print("")
 
-        print("======BRANCH ON EQUAL=====")
+        print("BRANCH ON EQUAL...")
         print("binary input: " + f'{304666848:032b}'[0:6])
         self.testInput.setOutputValue('controlSignal', int(f'{304666848:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
-        print("==========================")
+        print("")
 
-        print("====BRANCH ON NOT EQUAL===")
+        print("BRANCH ON NOT EQUAL...")
         print("binary input: " + f'{304666848:032b}'[0:6])
         self.testInput.setOutputValue('controlSignal', int(f'{304666848:032b}'[0:6], 2))
 
         self.control.readInput()
         self.control.setControlSignals()
-        print("==========================")
+        print("==========================\n")

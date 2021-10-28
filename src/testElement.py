@@ -13,7 +13,6 @@ class TestElement(CPUElement):
     
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
-        
         self.inputNames = []
         self.sources = []
         for src, name in inputSources:

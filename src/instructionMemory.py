@@ -33,7 +33,10 @@ class InstructionMemory(Memory):
     
     def writeOutput(self):
         
+        print("tryint to access: ", self.inputValues[self.inputName])
+        print(self.memory)
         instruction = f'{self.memory[self.inputValues[self.inputName]]:032b}'
+        print("instruction: " + instruction)
 
         shiftLeftTwo = instruction[6:32]
         control = instruction[0:6]
@@ -89,28 +92,30 @@ class TestInstructionMemory(unittest.TestCase):
         self.IM.writeOutput()
         self.testOutput.readInput()
 
+        print("========TESTING IM========")
         print(f'instruction: {2888105987:032b}')
 
         shiftLeftTwo = self.testOutput.inputValues['shiftLeftTwo']
-        print(f'shiftLeftTwo: {shiftLeftTwo}')
+        print(f'shiftLeftTwo: {shiftLeftTwo:026b}')
 
         control = self.testOutput.inputValues['control']
-        print(f'control: {control}')
+        print(f'control: {control:06b}')
 
         rs = self.testOutput.inputValues['rs']
-        print(f'rt: {rs}')
+        print(f'rt: {rs:05b}')
 
         rt = self.testOutput.inputValues['rt']
-        print(f'rs: {rt}')
+        print(f'rs: {rt:05b}')
 
         muxZero = self.testOutput.inputValues['muxZero']
-        print(f'muxZero: {muxZero}')
+        print(f'muxZero: {muxZero:05b}')
 
         muxOne = self.testOutput.inputValues['muxOne']
-        print(f'muxOne: {muxOne}')
+        print(f'muxOne: {muxOne:05b}')
 
         signExtend = self.testOutput.inputValues['signExtend']
-        print(f'signExtend: {signExtend}')
+        print(f'signExtend: {signExtend:016b}')
 
         aluControl = self.testOutput.inputValues['aluControl']
-        print(f'aluControl: {aluControl}')
+        print(f'aluControl: {aluControl:06b}')
+        print("==========================\n")

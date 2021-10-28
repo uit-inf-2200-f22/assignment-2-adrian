@@ -4,6 +4,7 @@ Implements an arithmetic logic unit
 import unittest
 from cpuElement import CPUElement
 from testElement import TestElement
+from common import Overflow
 
 class Alu(CPUElement):
 
@@ -28,25 +29,56 @@ class Alu(CPUElement):
         controlSignal = self.controlSignals[self.controlInputName]
 
         if controlSignal == 2:
-            self.outputValues[self.outputName] = readData1 + muxDecision
-        elif controlSignal == 3:
             result = readData1 + muxDecision
-            if result > 2147483648:
-                raise ValueError("overflow")
+            if result > 2147483647:
+                raise Overflow("Overflow on add")
             else:
                 self.outputValues[self.outputName] = result
+        elif controlSignal == 3:
+            result = readData1 + muxDecision
+            if result > 4294967295:
+                raise Overflow("Overflow on addu")
+            else:
+                self.outputValues[self.outputName] = result
+
         elif controlSignal == 6:
-            self.outputValues[self.outputName] = readData1 - muxDecision
+            result = readData1 - muxDecision
+            if result < -2147483648:
+                raise Overflow("Overflow on sub")
+            else:
+                self.outputValues[self.outputName] = result
+
         elif controlSignal == 4:
             result = readData1 - muxDecision
             if result < 0:
-                raise ValueError("overflow")
+                raise Overflow("overflow")
             else:
                 self.outputValues[self.outputName] = result
+
         elif controlSignal == 0:
             self.outputValues[self.outputName] = readData1 & muxDecision
+            
         elif controlSignal == 1:
             self.outputValues[self.outputName] = readData1 | muxDecision
+        
+        elif controlSignal == 5:
+            temp = readData1 | muxDecision
+            newStr = ""
+            binStr = f'{temp:032b}'
+            i = 0
+            bitHit = False
+            while i < 32:
+                if binStr[i] == '1':
+                    newStr += "0"
+                    bitHit = True
+                else:
+                    if bitHit:
+                        newStr += "1"
+                    else:
+                        newStr += "0"
+                i += 1
+            self.outputValues[self.outputName] = int(newStr,2)
+
         elif controlSignal == 7:
             if readData1 < muxDecision:
                 self.outputValues[self.outputName] = 1
@@ -59,6 +91,7 @@ class Alu(CPUElement):
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]
         result = readData1 - muxDecision
+        
         if result == 0:
             # rs - rt = 0, therefore zero signal is activated
             self.outputControlSignals[self.controlOutputName] = 1
@@ -96,7 +129,8 @@ class TestAlu(unittest.TestCase):
         )
 
     def test_correct_behaviour(self):
-        print("=======TESTING ADD=======")
+        print("========TESTING ALU=======")
+        print("AND...")
         print("expected result: 150")
         self.testInput1.setOutputValue('readData1', 100)
         self.testInput2.setOutputValue('muxDecision', 50)
@@ -116,9 +150,9 @@ class TestAlu(unittest.TestCase):
             print("TEST SUCCESS!")
         else:
             print("ADD FAILED!")
-        print("=========================\n")
+        print("")
 
-        print("=======TESTING SUB=======")
+        print("SUB...")
         print("expected result: 0")
         self.testInput1.setOutputValue('readData1', 100)
         self.testInput2.setOutputValue('muxDecision', 100)
@@ -134,13 +168,13 @@ class TestAlu(unittest.TestCase):
         output = self.testOutput.inputValues['aluResult']
         control = self.testOutput.controlSignals['zero']
         print("output: ", output, "zero: ", control)
-        if output == 50:
+        if output == 0:
             print("TEST SUCCESS!")
         else:
             print("SUB FAILED")
-        print("=========================\n")
+        print("")
 
-        print("=======TESTING AND=======")
+        print("AND...")
         print("excpected result: 32")
         self.testInput1.setOutputValue('readData1', 100)
         self.testInput2.setOutputValue('muxDecision', 50)
@@ -158,9 +192,9 @@ class TestAlu(unittest.TestCase):
             print("TEST SUCCESS!")
         else:
             print("AND FAILED")
-        print("=========================\n")
+        print("")
 
-        print("========TESTING OR=======")
+        print("OR...")
         print("excpected result: 118")
         self.testInput1.setOutputValue('readData1', 100)
         self.testInput2.setOutputValue('muxDecision', 50)
@@ -178,9 +212,29 @@ class TestAlu(unittest.TestCase):
             print("TEST SUCCESS!")
         else:
             print("OR FAILED")
-        print("=========================\n")
+        print("")
 
-        print("=======TESTING SLT=======")
+        print("NOR...")
+        print("excpected results: 4")
+        self.testInput1.setOutputValue('readData1', 9)
+        self.testInput2.setOutputValue('muxDecision', 2)
+        self.testInput1.setControlSignals('aluControl', 5)
+
+        self.alu.readInput()
+        self.alu.readControlSignals()
+        self.alu.writeOutput()
+        self.alu.setControlSignals()
+        
+        self.testOutput.readInput()
+        output = self.testOutput.inputValues['aluResult']
+        print("Result: ", output)
+        if output == 4:
+            print("TEST SUCCESS!")
+        else:
+            print("NOR FAILED")
+        print("")
+
+        print("STL...")
         print("excpected result: 0")
         self.testInput1.setOutputValue('readData1', 100)
         self.testInput2.setOutputValue('muxDecision', 50)
@@ -198,4 +252,44 @@ class TestAlu(unittest.TestCase):
             print("TEST SUCCESS!")
         else:
             print("STL FAILED")
-        print("=========================\n")
+        print("")
+
+        print("ADDU...")
+        print("excpected results: 20101")
+        self.testInput1.setOutputValue('readData1', 20000)
+        self.testInput2.setOutputValue('muxDecision', 101)
+        self.testInput1.setControlSignals('aluControl', 3)
+
+        self.alu.readInput()
+        self.alu.readControlSignals()
+        self.alu.writeOutput()
+        self.alu.setControlSignals()
+        
+        self.testOutput.readInput()
+        output = self.testOutput.inputValues['aluResult']
+        print("Result: ", output)
+        if output == 20101:
+            print("TEST SUCCESS!")
+        else:
+            print("ADDU FAILED")
+        print("")
+
+        print("SUBU...")
+        print("excpected results: 19899")
+        self.testInput1.setOutputValue('readData1', 20000)
+        self.testInput2.setOutputValue('muxDecision', 101)
+        self.testInput1.setControlSignals('aluControl', 4)
+
+        self.alu.readInput()
+        self.alu.readControlSignals()
+        self.alu.writeOutput()
+        self.alu.setControlSignals()
+        
+        self.testOutput.readInput()
+        output = self.testOutput.inputValues['aluResult']
+        print("Result: ", output)
+        if output == 19899:
+            print("TEST SUCCESS!")
+        else:
+            print("SUBU FAILED")
+        print("==========================\n")

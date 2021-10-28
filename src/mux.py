@@ -34,8 +34,10 @@ class Mux(CPUElement):
         assert(muxControl == 0 or muxControl == 1), 'Invalid mux control signal value: %d' % (muxControl,)
         
         if muxControl == 0:
+            print("input from zero: ",self.inputValues[self.inputZero])
             self.outputValues[self.outputName] = self.inputValues[self.inputZero]
-        else:  # muxControl == 1
+        else:
+            print("input from one: ",self.inputValues[self.inputOne])
             self.outputValues[self.outputName] = self.inputValues[self.inputOne]
     
     def printOutput(self):
