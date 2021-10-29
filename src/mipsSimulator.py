@@ -34,14 +34,15 @@ class MIPSSimulator():
         self.instructionMemory = InstructionMemory(memoryFile)
         self.registerFile = RegisterFile()
 
-        startAddress = self.startAddress
-        print(startAddress)
+        # the self.startAddress function literally does not work, even tried modifying it myself
+        startAddress = next(iter(sorted(self.instructionMemory.memory.keys())))
+        print(f'start address: {startAddress}')
 
         self.addPC = Add()
         self.constant4 = Constant(4)
         self.control = Control()
         self.regMux = Mux()
-        self.pc = PC(3217031168)
+        self.pc = PC(startAddress)
         self.signExtend = SignExtend()
         self.shiftLeftTwoPC = ShiftLeftTwo()
         self.pcJump = PcJump()
@@ -147,7 +148,8 @@ class MIPSSimulator():
             [(self.instructionMemory, 'muxZero'), (self.instructionMemory, 'muxOne')],
             ['muxOut'],
             [(self.control, 'regDst')],
-            []
+            [],
+            'register destination Mux'
         )
 
         self.registerFile.connect(
@@ -160,7 +162,7 @@ class MIPSSimulator():
         self.signExtend.connect(
             [(self.instructionMemory, 'signExtend')],
             ['signExtendOutput'],
-            [],
+            [(self.control, 'aluOp'), (self.control, 'branch')],
             []
         )
 
@@ -168,7 +170,8 @@ class MIPSSimulator():
             [(self.registerFile, 'dataB'), (self.signExtend, 'signExtendOutput')],
             ['aluMuxOutput'],
             [(self.control, 'aluSrc')],
-            []
+            [],
+            'aluSrc Mux'
         )
 
         self.aluControl.connect(
@@ -193,10 +196,11 @@ class MIPSSimulator():
         )
         
         self.dmMux.connect(
-            [(self.dataMemory, 'memoryData'), (self.alu, 'aluResult')],
+            [(self.alu, 'aluResult'), (self.dataMemory, 'memoryData')],
             ['regWrite'],
             [(self.control, 'memtoReg')],
-            []
+            [],
+            'data memory Mux'
         )
 
         self.shiftLeftTwo.connect(
@@ -211,6 +215,7 @@ class MIPSSimulator():
             ['branchAdd'],
             [],
             [],
+            'branch destination adder'
         )
 
         self.pcIncOrBranchMux.connect(
@@ -218,13 +223,15 @@ class MIPSSimulator():
             ['pcBranchOutput'],
             [(self.andGate, 'branch')],
             [],
+            'pcIncOrBranchMux'
         )
         
         self.jmpOrBranchMux.connect(
             [(self.pcIncOrBranchMux, 'pcBranchOutput'), (self.pcJump, 'jumpAddress')],
             ['nextAddress'],
             [(self.control, 'jump')],
-            []
+            [],
+            'jmpOrBranchMux'
         )
 
         self.bne.connect(
@@ -266,7 +273,8 @@ class MIPSSimulator():
             [(self.pc, 'pcAddress'), (self.constant4, 'constant')],
             ['pcIncrement'],
             [],
-            []
+            [],
+            'pc increment output'
         )
 
 
@@ -274,9 +282,13 @@ class MIPSSimulator():
         '''
         Returns first instruction from instruction memory
         '''
-        print("sdsad")
-        print(next(iter(sorted(self.instructionMemory.memory.keys()))))
-        return next(iter(sorted(self.instructionMemory.memory.keys())))
+
+        return 20000000
+        # mem = self.instructionMemory.memory
+        # print(mem)
+        # return next(iter(mem))
+        # print(next(iter(sorted(self.instructionMemory.memory.keys()))))
+        # return next(iter(sorted(self.instructionMemory.memory.keys())))
 
     def clockCycles(self):
         '''Returns the number of clock cycles spent executing instructions.'''
@@ -292,7 +304,6 @@ class MIPSSimulator():
     def registerFile(self):
         '''Returns dictionary, mapping register numbers to data, holding
         register file after instructions have finished executing.'''
-
         return self.registerFile.register
 
     def printDataMemory(self):
@@ -309,13 +320,16 @@ class MIPSSimulator():
         # The following is just a small sample implementation
 
         # self.pc.writeOutput()
-
-        print(f'===========CYCLE {self.nCycles}===========')
+        print(f'\n===========CYCLE {self.nCycles}===========')
         for elem in self.elements:
             elem.readControlSignals()
             elem.readInput()
             elem.writeOutput()
             elem.setControlSignals()
         self.registerFile.readInput()
-        print(f'==========================================')
+        self.registerFile.writeOutput()
+        self.registerFile.printAll()
+        print(f'==========================================\n')
         # self.pc.readInput()
+
+        

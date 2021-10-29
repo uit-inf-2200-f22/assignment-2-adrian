@@ -24,7 +24,7 @@ class AluControl(CPUElement):
 
     def setControlSignals(self): 
         controlSignal = self.controlSignals[self.controlName]
-        ctrlStr = f'{controlSignal:02b}'
+        ctrlStr = f'{controlSignal:03b}'
         print("Writing control output for aluControl...")
         signal = self.inputValues[self.inputName]        
         binStr = f'{signal:06b}'
@@ -34,46 +34,55 @@ class AluControl(CPUElement):
         print("signalValue is: ", signalValue)
         print("aluOP is: ", ctrlStr)
 
-        if controlSignal == 0:
+        if ctrlStr == '000':
             print("I-instruction detected...")
-            print("adding...")
+            print("output: add")
             self.outputControlSignals[self.outputSignalName] = 2
 
-        if ctrlStr[0] == '0':
+        elif ctrlStr == '001':
             print("branch on equal operation detected...")
             print("subtracting...")
             self.outputControlSignals[self.outputSignalName] = 6
         
-        if ctrlStr[0] == '1':
+        if ctrlStr == '010':
             print("R-instruction detected...")
             if signalValue == 0:
-                print("add detected...")
+                print("output: add")
                 self.outputControlSignals[self.outputSignalName] = 2
             if signalValue == 1:
-                print("addu detected...")
+                print("output: addu")
                 self.outputControlSignals[self.outputSignalName] = 3        # There does not seem to be any official aluOperation output matchin a addu, so 3 is arbitrarily chosen here, it seems...
             if signalValue == 2:
-                print("sub detected...")
+                print("output: sub")
                 self.outputControlSignals[self.outputSignalName] = 6
             if signalValue == 3:
-                print("subu detected...")
+                print("output: sub")
                 self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here, i think atleast...
             if signalValue == 4:
-                print("and detected...")
+                print("output: and")
                 self.outputControlSignals[self.outputSignalName] = 0
             if signalValue == 5:
-                print("or detected...")
+                print("output: or")
                 self.outputControlSignals[self.outputSignalName] = 1
             if signalValue == 7:
-                print("nor detected...")
+                print("output: nor")
                 self.outputControlSignals[self.outputSignalName] = 5
             if signalValue == 10:
-                print("set on less than detected...")
+                print("output: set on less than")
                 self.outputControlSignals[self.outputSignalName] = 7
             if signalValue == 13:
-                print("break deteced")
+                print("breaking")
                 raise Break("break instruction detected")
         print("output value set!\n")
+
+        if ctrlStr == '011':
+            print("I-instruction detected...")
+            print("output: shiftleft")
+            self.outputControlSignals[self.outputSignalName] = 8
+        if ctrlStr == '100':
+            print("I-instruction detected...")
+            print("output: addu")
+            self.outputControlSignals[self.outputSignalName] = 3
 
 class TestAluControl(unittest.TestCase):
     def setUp(self):

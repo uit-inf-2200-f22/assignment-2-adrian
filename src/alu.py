@@ -4,7 +4,7 @@ Implements an arithmetic logic unit
 import unittest
 from cpuElement import CPUElement
 from testElement import TestElement
-from common import Overflow
+from common import Overflow, fromUnsignedWordToSignedWord, fromSignedWordToUnsignedWord
 
 class Alu(CPUElement):
 
@@ -27,21 +27,30 @@ class Alu(CPUElement):
         muxDecision = self.inputValues[self.inputNameTwo]
         print("Writing output for ALU...")
         controlSignal = self.controlSignals[self.controlInputName]
+        print(f'readData1: {readData1}')
+        print(f'readData2: {muxDecision}')
 
         if controlSignal == 2:
+            print("add")
             result = readData1 + muxDecision
             if result > 2147483647:
                 raise Overflow("Overflow on add")
             else:
                 self.outputValues[self.outputName] = result
+
         elif controlSignal == 3:
+            print("addu")
             result = readData1 + muxDecision
             if result > 4294967295:
-                raise Overflow("Overflow on addu")
+                print("snipping")
+                binStr = f'{result:033b}'
+                binSnip = int(binStr[1:33], 2)
+                self.outputValues[self.outputName] = binSnip
             else:
                 self.outputValues[self.outputName] = result
 
         elif controlSignal == 6:
+            print("sub")
             result = readData1 - muxDecision
             if result < -2147483648:
                 raise Overflow("Overflow on sub")
@@ -49,9 +58,14 @@ class Alu(CPUElement):
                 self.outputValues[self.outputName] = result
 
         elif controlSignal == 4:
+            print("")
             result = readData1 - muxDecision
             if result < 0:
-                raise Overflow("overflow")
+                print("snipping")
+                tmp = fromSignedWordToUnsignedWord(result)
+                binStr = f'{tmp:033b}'
+                binSnip = int(binStr[1:33], 2)
+                self.outputValues[self.outputName] = binSnip
             else:
                 self.outputValues[self.outputName] = result
 
@@ -61,22 +75,21 @@ class Alu(CPUElement):
         elif controlSignal == 1:
             self.outputValues[self.outputName] = readData1 | muxDecision
         
+        # nor = negated or, in case of 
         elif controlSignal == 5:
-            temp = readData1 | muxDecision
+            temp = fromSignedWordToUnsignedWord(readData1) | fromSignedWordToUnsignedWord(muxDecision)
             newStr = ""
             binStr = f'{temp:032b}'
+            print(binStr)
             i = 0
             bitHit = False
             while i < 32:
                 if binStr[i] == '1':
                     newStr += "0"
-                    bitHit = True
                 else:
-                    if bitHit:
-                        newStr += "1"
-                    else:
-                        newStr += "0"
+                    newStr += "1"
                 i += 1
+            print(newStr)
             self.outputValues[self.outputName] = int(newStr,2)
 
         elif controlSignal == 7:
@@ -84,16 +97,27 @@ class Alu(CPUElement):
                 self.outputValues[self.outputName] = 1
             else:
                 self.outputValues[self.outputName] = 0
+                
+        # Here, in order to left shift 16 times, and be left with a 32 bit number, we neet to split it
+        elif controlSignal == 8:
+            print("shifting left")
+            print(f'binStr: {muxDecision:032b}')
+            result = muxDecision << 16
+            bin = f'{result:048b}'[16:48]
+            print(f'after shift: {bin}\t{int(bin, 2)}')
+            self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(bin, 2))
         else:
             print("no valid control signal given")
         print("")
 
     def setControlSignals(self):
-        print("Writing control output for ALU...\n")
+        print("Writing control output for ALU...")
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]
         result = readData1 - muxDecision
-        
+        print(f'readData1: {readData1}')
+        print(f'readData2: {muxDecision}')
+        print(f'readData1 - readData2: {result}\n')
         if result == 0:
             # rs - rt = 0, therefore zero signal is activated
             self.outputControlSignals[self.controlOutputName] = 1

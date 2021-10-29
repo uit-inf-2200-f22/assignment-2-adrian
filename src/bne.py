@@ -25,14 +25,18 @@ class BNE(CPUElement):
     def setControlSignals(self):
         ctrlSignal = self.controlSignals[self.controlSignal]
         zeroSignal = self.controlSignals[self.zeroSignal]
-        print("Writing control output for bne sign inverter...\n")
+        print("Writing control output for bne sign inverter...")
+        print(f'control signal: {ctrlSignal}')
+        print(f'zero signal: {zeroSignal}')
         if ctrlSignal == 1:
             if zeroSignal == 1:
                 self.outputControlSignals[self.outputSignal] = 0
             else:
                 self.outputControlSignals[self.outputSignal] = 1
         else:
+            print(f'output: {zeroSignal}')
             self.outputControlSignals[self.outputSignal] = zeroSignal
+        print("")
 
 class TestBNE(unittest.TestCase):
     def setUp(self):

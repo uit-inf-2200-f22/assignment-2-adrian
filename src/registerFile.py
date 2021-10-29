@@ -56,7 +56,6 @@ class RegisterFile(CPUElement):
 
     def writeOutput(self):
         print("Writing output for registers...")
-        print("")
         controlSignal = self.controlSignals[self.controlName]
 
         rr1 = self.inputValues[self.rs]
@@ -68,7 +67,9 @@ class RegisterFile(CPUElement):
         self.outputValues[self.readData2] = self.register[rr2]
         
         if controlSignal == 1:
+            print(f'writing {self.inputValues[self.inputMuxDM]} to register {wr}')
             self.register[wr] = self.inputValues[self.inputMuxDM]
+        print("")
 
 class TestRegisterFile(unittest.TestCase):
     def setUp(self):

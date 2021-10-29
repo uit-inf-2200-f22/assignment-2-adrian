@@ -2,12 +2,13 @@
 Code written for inf-2200, University of Tromso
 '''
 
+from os import name
 import unittest
 from cpuElement import CPUElement
 from testElement import TestElement
 
 class Mux(CPUElement):
-    def connect(self, inputSources, outputValueNames, control, outputSignalNames):
+    def connect(self, inputSources, outputValueNames, control, outputSignalNames, name):
         '''
         Connect mux to input sources and controller
         
@@ -26,9 +27,11 @@ class Mux(CPUElement):
         self.outputName = outputValueNames[0]       # OutputValueNames er bare en string, som har navnet til outputet
         self.controlName = control[0][1]            # Henter verdi nummer 2 fra første element i dictionary, altså navnet til control signalet
 
+        self.name = name
+
     def writeOutput(self):
         muxControl = self.controlSignals[self.controlName]
-        print("Writing output for MUX...")
+        print(f'Writing output for "{self.name}"...')
         print(f'control signal: {muxControl}')
         assert(isinstance(muxControl, int))
         assert(not isinstance(muxControl, bool))  # ...  (not bool)

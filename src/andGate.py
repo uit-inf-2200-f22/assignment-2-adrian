@@ -25,6 +25,8 @@ class And(CPUElement):
         control = self.controlSignals[self.controlInput] 
         zero = self.controlSignals[self.zeroControl]
         print("Writing control output for andGate...")
+        print(f'zero signal input {zero}')
+        print(f'control signal: {control}')
         if control == 1 and zero == 1:
             print("AND GATE output: 1\n")
             self.outputControlSignals[self.signalName] = 1

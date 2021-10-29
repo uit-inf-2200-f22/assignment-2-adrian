@@ -7,7 +7,7 @@ Code written for inf-2200, University of Tromso
 from cpuElement import CPUElement
 
 class Add(CPUElement):
-    def connect(self, inputSources, outputValueNames, control, outputSignalNames):
+    def connect(self, inputSources, outputValueNames, control, outputSignalNames, name):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
         
         assert(len(inputSources) == 2), 'Adder should have two inputs'
@@ -16,6 +16,8 @@ class Add(CPUElement):
         assert(len(outputSignalNames) == 0), 'Adder should not have any control output'
         
         self.outputName = outputValueNames[0]
+
+        self.name = name
   
     def writeOutput(self):
         total_sum = 0
@@ -24,4 +26,4 @@ class Add(CPUElement):
             total_sum += self.inputValues[k]
 
         self.outputValues[self.outputName] = total_sum & 0xffffffff  # Convert to 32-bit (ignore overflow)
-        print(f'add result: {self.outputValues[self.outputName]}\n')
+        print(f'{self.name} result: {self.outputValues[self.outputName]}\n')

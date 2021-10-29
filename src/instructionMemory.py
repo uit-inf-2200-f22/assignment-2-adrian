@@ -33,7 +33,7 @@ class InstructionMemory(Memory):
     
     def writeOutput(self):
         print("Writing output for IM...")
-        print("tryint to access: ", self.inputValues[self.inputName])
+        print("trying to access: ", self.inputValues[self.inputName])
         print("\nmemory:")
         print(self.memory, "\n")
         instruction = f'{self.memory[self.inputValues[self.inputName]]:032b}'
