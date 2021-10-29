@@ -41,7 +41,7 @@ class AluControl(CPUElement):
 
         elif ctrlStr == '001':
             print("branch on equal operation detected...")
-            print("subtracting...")
+            print("output: sub")
             self.outputControlSignals[self.outputSignalName] = 6
         
         if ctrlStr == '010':

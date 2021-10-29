@@ -40,9 +40,16 @@ class DataMemory(Memory):
         if memReadControl == 1 and memWriteControl == 0:
             self.outputValues[self.outputName] = self.memory[address]
 
-        if memWriteControl == 1 and memReadControl == 0:
+        elif memWriteControl == 1 and memReadControl == 0:
             print(f'writing {writeData} to {address}')
             self.memory[address] = writeData
+            print(f'now in memory: {self.memory[address]}')
+        else:
+            print("doing nothing...")
+
+        print("memory:")
+        print(self.memory)
+
         print("")
 
 class TestDataMemory(unittest.TestCase):

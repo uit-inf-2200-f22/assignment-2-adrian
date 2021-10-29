@@ -99,11 +99,11 @@ class Control(CPUElement):
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 0
             self.outputControlSignals[self.memtoReg] = 0
-            self.outputControlSignals[self.regWrite] = 1
+            self.outputControlSignals[self.regWrite] = 0
             self.outputControlSignals[self.memRead] = 0
             self.outputControlSignals[self.memWrite] = 0
             self.outputControlSignals[self.branch] = 1
-            self.outputControlSignals[self.ALUOp] = 0
+            self.outputControlSignals[self.ALUOp] = 1
             self.outputControlSignals[self.jump] = 0
             self.outputControlSignals[self.bne] = 0
 

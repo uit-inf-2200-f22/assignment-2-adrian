@@ -119,8 +119,11 @@ class Alu(CPUElement):
         print(f'readData2: {muxDecision}')
         print(f'readData1 - readData2: {result}\n')
         if result == 0:
-            # rs - rt = 0, therefore zero signal is activated
+            print(f'zero signal: 1')
             self.outputControlSignals[self.controlOutputName] = 1
+        else:
+            print(f'zero signal: 0')
+            self.outputControlSignals[self.controlOutputName] = 0
 
 class TestAlu(unittest.TestCase):
     def setUp(self):
