@@ -25,13 +25,13 @@ class Alu(CPUElement):
     def writeOutput(self):
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]
-        print("Writing output for ALU...")
+        # print("Writing output for ALU...")
         controlSignal = self.controlSignals[self.controlInputName]
-        print(f'readData1: {readData1}')
-        print(f'readData2: {muxDecision}')
+        # print(f'readData1: {readData1}')
+        # print(f'readData2: {muxDecision}')
 
         if controlSignal == 2:
-            print("add")
+            # print("add")
             result = readData1 + muxDecision
             if result > 2147483647:
                 raise Overflow("Overflow on add")

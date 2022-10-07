@@ -31,27 +31,27 @@ class Mux(CPUElement):
 
     def writeOutput(self):
         muxControl = self.controlSignals[self.controlName]
-        print(f'Writing output for "{self.name}"...')
-        print(f'control signal: {muxControl}')
+        # print(f'Writing output for "{self.name}"...')
+        # print(f'control signal: {muxControl}')
         assert(isinstance(muxControl, int))
         assert(not isinstance(muxControl, bool))  # ...  (not bool)
         assert(muxControl == 0 or muxControl == 1), 'Invalid mux control signal value: %d' % (muxControl,)
         
-        print(f'input 0 {self.inputValues[self.inputZero]}')
-        print(f'input 1 {self.inputValues[self.inputOne]}')
+        # print(f'input 0 {self.inputValues[self.inputZero]}')
+        # print(f'input 1 {self.inputValues[self.inputOne]}')
 
         if muxControl == 0:
-            print("outputting 0\n")
+            # print("outputting 0\n")
             self.outputValues[self.outputName] = self.inputValues[self.inputZero]
         else:
-            print("outputting 1\n")
+            # print("outputting 1\n")
             self.outputValues[self.outputName] = self.inputValues[self.inputOne]
     
-    def printOutput(self):
+    # def printOutput(self):
         '''
-        Debug function that prints the output value
+        # Debug function that prints the output value
         '''
-        print('mux.output = %d' % (self.outputValues[self.outputName],))
+        # print('mux.output = %d' % (self.outputValues[self.outputName],))
 
 
 class TestMux(unittest.TestCase):

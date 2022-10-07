@@ -25,63 +25,63 @@ class AluControl(CPUElement):
     def setControlSignals(self): 
         controlSignal = self.controlSignals[self.controlName]
         ctrlStr = f'{controlSignal:03b}'
-        print("Writing control output for aluControl...")
+        # print("Writing control output for aluControl...")
         signal = self.inputValues[self.inputName]        
         binStr = f'{signal:06b}'
         
         # Only the 4 last bits in the func field are relevant
         signalValue = int(binStr[2:6],2)
-        print("signalValue is: ", signalValue)
-        print("aluOP is: ", ctrlStr)
+        # print("signalValue is: ", signalValue)
+        # print("aluOP is: ", ctrlStr)
 
         if ctrlStr == '000':
-            print("I-instruction detected...")
-            print("output: add")
+            # print("I-instruction detected...")
+            # print("output: add")
             self.outputControlSignals[self.outputSignalName] = 2
 
         elif ctrlStr == '001':
-            print("branch on equal operation detected...")
-            print("output: sub")
+            # # print("branch on equal operation detected...")
+            # # print("output: sub")
             self.outputControlSignals[self.outputSignalName] = 6
         
         if ctrlStr == '010':
-            print("R-instruction detected...")
+            # print("R-instruction detected...")
             if signalValue == 0:
-                print("output: add")
+                # print("output: add")
                 self.outputControlSignals[self.outputSignalName] = 2
             if signalValue == 1:
-                print("output: addu")
+                # print("output: addu")
                 self.outputControlSignals[self.outputSignalName] = 3        # There does not seem to be any official aluOperation output matchin a addu, so 3 is arbitrarily chosen here, it seems...
             if signalValue == 2:
-                print("output: sub")
+                # print("output: sub")
                 self.outputControlSignals[self.outputSignalName] = 6
             if signalValue == 3:
-                print("output: sub")
+                # print("output: sub")
                 self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here, i think atleast...
             if signalValue == 4:
-                print("output: and")
+                # print("output: and")
                 self.outputControlSignals[self.outputSignalName] = 0
             if signalValue == 5:
-                print("output: or")
+                # print("output: or")
                 self.outputControlSignals[self.outputSignalName] = 1
             if signalValue == 7:
-                print("output: nor")
+                # print("output: nor")
                 self.outputControlSignals[self.outputSignalName] = 5
             if signalValue == 10:
-                print("output: set on less than")
+                # print("output: set on less than")
                 self.outputControlSignals[self.outputSignalName] = 7
             if signalValue == 13:
-                print("breaking")
+                print("BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING ")
                 raise Break("break instruction detected")
-        print("output value set!\n")
+        # print("output value set!\n")
 
         if ctrlStr == '011':
-            print("I-instruction detected...")
-            print("output: shiftleft")
+            # print("I-instruction detected...")
+            # print("output: shiftleft")
             self.outputControlSignals[self.outputSignalName] = 8
         if ctrlStr == '100':
-            print("I-instruction detected...")
-            print("output: addu")
+            # print("I-instruction detected...")
+            # print("output: addu")
             self.outputControlSignals[self.outputSignalName] = 3
 
 class TestAluControl(unittest.TestCase):
@@ -110,7 +110,7 @@ class TestAluControl(unittest.TestCase):
         )
     
     def test_correct_behaviour(self):
-        print("=======TEST ALUCTRL=======")
+        # print("=======TEST ALUCTRL=======")
         self.testInput.setOutputValue('signal', int('000001', 2))
         self.testInput.setControlSignals('controlSignal', 2)
 
@@ -121,5 +121,5 @@ class TestAluControl(unittest.TestCase):
         self.testOutput.readControlSignals()
 
         control = self.testOutput.controlSignals['aluControl']
-        print("ctrl output: ", control)
-        print("==========================\n")
+        # print("ctrl output: ", control)
+        # print("==========================\n")

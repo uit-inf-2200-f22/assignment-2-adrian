@@ -9,8 +9,8 @@ from testElement import TestElement
 from memory import Memory
 from pc import PC
 class InstructionMemory(Memory):
-    def __init__(self, filename):
-        Memory.__init__(self, filename)
+    def __init__(self, filename, breakinmemoryfile):
+        Memory.__init__(self, filename, breakinmemoryfile)
     
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
@@ -32,9 +32,9 @@ class InstructionMemory(Memory):
         self.aluControl = outputValueNames[7]
     
     def writeOutput(self):
-        print("Writing output for IM...")
-        print("trying to access: ", self.inputValues[self.inputName])
+        # print("Writing output for IM...")
         instruction = f'{self.memory[self.inputValues[self.inputName]]:032b}'
+        print("Address: ", self.inputValues[self.inputName])
         print(f'instruction: {instruction}\n')
 
         shiftLeftTwo = instruction[6:32]
@@ -91,30 +91,30 @@ class TestInstructionMemory(unittest.TestCase):
         self.IM.writeOutput()
         self.testOutput.readInput()
 
-        print("========TESTING IM========")
-        print(f'instruction: {2888105987:032b}')
+        # print("========TESTING IM========")
+        # print(f'instruction: {2888105987:032b}')
 
         shiftLeftTwo = self.testOutput.inputValues['shiftLeftTwo']
-        print(f'shiftLeftTwo: {shiftLeftTwo:026b}')
+        # print(f'shiftLeftTwo: {shiftLeftTwo:026b}')
 
         control = self.testOutput.inputValues['control']
-        print(f'control: {control:06b}')
+        # print(f'control: {control:06b}')
 
         rs = self.testOutput.inputValues['rs']
-        print(f'rt: {rs:05b}')
+        # print(f'rt: {rs:05b}')
 
         rt = self.testOutput.inputValues['rt']
-        print(f'rs: {rt:05b}')
+        # print(f'rs: {rt:05b}')
 
         muxZero = self.testOutput.inputValues['muxZero']
-        print(f'muxZero: {muxZero:05b}')
+        # print(f'muxZero: {muxZero:05b}')
 
         muxOne = self.testOutput.inputValues['muxOne']
-        print(f'muxOne: {muxOne:05b}')
+        # print(f'muxOne: {muxOne:05b}')
 
         signExtend = self.testOutput.inputValues['signExtend']
-        print(f'signExtend: {signExtend:016b}')
+        # print(f'signExtend: {signExtend:016b}')
 
         aluControl = self.testOutput.inputValues['aluControl']
-        print(f'aluControl: {aluControl:06b}')
-        print("==========================\n")
+        # print(f'aluControl: {aluControl:06b}')
+        # print("==========================\n")

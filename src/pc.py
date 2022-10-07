@@ -20,6 +20,7 @@ class PC(CPUElement):
         self.outputField_pcAddress = outputValueNames[0]
         
         self.inputValues[self.inputField_newPcAddress] = self.baseaddr # initialize PC
+        print("base address: ", self.baseaddr)
 
         self.q = 0
 

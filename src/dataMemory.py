@@ -10,8 +10,9 @@ from memory import Memory
 from common import fromSignedWordToUnsignedWord
 
 class DataMemory(Memory):
-    def __init__(self, filename):
-        Memory.__init__(self, filename)
+    def __init__(self, filename, breakinmemoryfile):
+        Memory.__init__(self, filename, breakinmemoryfile)
+        # self.initializeMemory(filename, breakinmemoryfile)
         
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
@@ -29,14 +30,15 @@ class DataMemory(Memory):
         self.writeData = inputSources[1][1]
         
     def writeOutput(self):
-        print("Writing output for dataMemory...")
+        # print("Writing output for dataMemory...")
         memReadControl = self.controlSignals[self.memRead]
         memWriteControl = self.controlSignals[self.memWrite]
         writeData = self.inputValues[self.writeData]
         address = fromSignedWordToUnsignedWord(self.inputValues[self.address])
-        print(f'control signals: {memReadControl} & {memWriteControl}')
-        print(f'writeData: {writeData}')
-        print(f'address: {address}')
+        # print(f'control signals: {memReadControl} & {memWriteControl}')
+        # print(f'writeData: {writeData}')
+        # print(f'address: {address}')
+        print("IN DATAMEMORY")
         if memReadControl == 1 and memWriteControl == 0:
             self.outputValues[self.outputName] = self.memory[address]
 
@@ -47,10 +49,27 @@ class DataMemory(Memory):
         else:
             print("doing nothing...")
 
-        print("memory:")
-        print(self.memory)
+        # print("memory:")
+        # print(self.memory)
 
-        print("")
+        # print("")
+
+    # def initializeMemory(self, filename, breakinmemoryfile):
+
+    #     mem = open(filename, 'r').readlines()
+
+    #     addresses = []
+    #     instruction = []
+    #     print("initializing DATAMEMORY")
+    #     l = 0
+    #     for line in mem:
+    #         # print(line)
+    #         if line[0] == '#' or line[0] == '\n' or line[0] == '>':
+    #             if len(line) > 1:
+    #                 if line[1] == '#' and line[18] == 'D':
+    #                     print("\ndatamemory found\n")
+
+    #     print("initializing DATAMEMORY done")
 
 class TestDataMemory(unittest.TestCase):
     def setUp(self, memoryFile):
@@ -78,10 +97,10 @@ class TestDataMemory(unittest.TestCase):
         )
 
     def test_correct_behaviour(self):
-        print("========TESTING DM========")
-        print("MEMREAD...")
-        print("loaded on mem: 95")
-        print("memWrite: 0\tmemRead: 1")
+        # print("========TESTING DM========")
+        # print("MEMREAD...")
+        # print("loaded on mem: 95")
+        # print("memWrite: 0\tmemRead: 1")
         self.dataMemory.memory = {266481593 : 95}
         self.testInput.setOutputValue('address', 266481593)
         self.testInput.setOutputValue('writeData', 102)
@@ -93,12 +112,12 @@ class TestDataMemory(unittest.TestCase):
         self.dataMemory.writeOutput()
 
         self.testOutput.readInput()
-        print("output: ", self.testOutput.inputValues['readData'])
-        print("")
+        # print("output: ", self.testOutput.inputValues['readData'])
+        # print("")
 
-        print("MEMWRITE...")
-        print("data to write: 102")
-        print("memWrite: 1\tmemRead: 0")
+        # print("MEMWRITE...")
+        # print("data to write: 102")
+        # print("memWrite: 1\tmemRead: 0")
         self.testInput.setOutputValue('address', 266481593)
         self.testInput.setOutputValue('writeData', 102)
         self.testInput.setControlSignals('memWrite', 1)
@@ -109,5 +128,5 @@ class TestDataMemory(unittest.TestCase):
         self.dataMemory.writeOutput()
 
         self.testOutput.readInput()
-        print("on address: ", self.dataMemory.memory['address'])
-        print("==========================\n")
+        # print("on address: ", self.dataMemory.memory['address'])
+        # print("==========================\n")

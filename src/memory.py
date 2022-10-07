@@ -14,11 +14,12 @@ from testElement import TestElement
 import common
 
 class Memory(CPUElement):
-    def __init__(self, filename):
+    def __init__(self, filename, breakinmemoryfile):
     
         # Dictionary mapping memory addresses to data
         # Both key and value must be of type 'long'
         self.memory = {}
+        self.breakinmemoryfile = int(breakinmemoryfile,10)
         
         self.initializeMemory(filename)
     
@@ -35,12 +36,23 @@ class Memory(CPUElement):
         address = []
         instruction = []
 
+        print("initalizing memory...")
+
         # Loops through each line in the mem lists, adds every word, separated by a tab, into a new list
         # which is then added to its respective list.
+        l = 0
         for line in mem:
             if line[0] == '#' or line[0] == '\n' or line[0] == '>':
+                if line[0] == '>' and l != self.breakinmemoryfile:
+                    l += 1
+                elif l == self.breakinmemoryfile:
+                    break
                 continue
             line = line.split("\t")
+            if len(line[0]) > 2 :
+                line[0] = line[0][0: 0:] + line[0][1 + 1::]
+            if len(line[1]) > 2 :
+                line[1] = line[1][0: 0:] + line[1][1 + 1::]
             address.append(int(line[0], 16))
             instruction.append(int(line[1], 16))
 
@@ -49,7 +61,15 @@ class Memory(CPUElement):
         while i < len(address):
             self.memory[int(address[i])] = int(instruction[i])
             i += 1
+        
+        keys = list(self.memory.keys())
+        q = 0
+        print("printing memory")
+        for line in self.memory:
+            print(line, "\t", self.memory[keys[q]])
+            q = q+1
 
+        print("initalizing memory done")
 
     def printAll(self):
         for key in sorted(self.memory.keys()):

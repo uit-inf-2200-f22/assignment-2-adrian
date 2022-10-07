@@ -25,18 +25,18 @@ class BNE(CPUElement):
     def setControlSignals(self):
         ctrlSignal = self.controlSignals[self.controlSignal]
         zeroSignal = self.controlSignals[self.zeroSignal]
-        print("Writing control output for bne sign inverter...")
-        print(f'control signal: {ctrlSignal}')
-        print(f'zero signal: {zeroSignal}')
+        # print("Writing control output for bne sign inverter...")
+        # print(f'control signal: {ctrlSignal}')
+        # print(f'zero signal: {zeroSignal}')
         if ctrlSignal == 1:
             if zeroSignal == 1:
                 self.outputControlSignals[self.outputSignal] = 0
             else:
                 self.outputControlSignals[self.outputSignal] = 1
         else:
-            print(f'output: {zeroSignal}')
+            # print(f'output: {zeroSignal}')
             self.outputControlSignals[self.outputSignal] = zeroSignal
-        print("")
+        # print("")
 
 class TestBNE(unittest.TestCase):
     def setUp(self):
@@ -64,10 +64,10 @@ class TestBNE(unittest.TestCase):
         )
     
     def test_correct_behaviour(self):
-        print("=======TESTING BNE=======")
-        print("input...")
-        print("ctrl: 0\tzero: 1")
-        print("excpected outcome: 1")
+        # print("=======TESTING BNE=======")
+        # print("input...")
+        # print("ctrl: 0\tzero: 1")
+        # print("excpected outcome: 1")
         self.testInput.setControlSignals('ctrl', 0)
         self.testInput.setControlSignals('zero', 1)
 
@@ -77,17 +77,17 @@ class TestBNE(unittest.TestCase):
         self.testOutput.readControlSignals()
 
         output = self.testOutput.controlSignals['outputSignal']
-        print(f'output signal: {output}')
+        print(f'IN BNE, output signal: {output}')
         if output == 1:
             print("SUCCESS")
         else:
             print("FAIL")
         
-        print("")
+        # print("")
 
-        print("input...")
-        print("ctrl: 1\tzeroSignal: 0")
-        print("excpected outcome: 1")
+        # print("input...")
+        # print("ctrl: 1\tzeroSignal: 0")
+        # print("excpected outcome: 1")
         self.testInput.setControlSignals('ctrl', 1)
         self.testInput.setControlSignals('zero', 0)
 
@@ -97,9 +97,9 @@ class TestBNE(unittest.TestCase):
         self.testOutput.readControlSignals()
 
         output = self.testOutput.controlSignals['outputSignal']
-        print(f'output signal: {output}')
+        print(f'IN BNE output signal: {output}')
         if output == 1:
             print("SUCCESS")
         else:
             print("FAIL")
-        print("=========================\n")
+        # print("=========================\n")
