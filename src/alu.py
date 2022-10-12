@@ -33,13 +33,17 @@ class Alu(CPUElement):
         if controlSignal == 2:
             # print("add")
             result = readData1 + muxDecision
+            print("adding", readData1, "and", muxDecision)
             if result > 2147483647:
-                raise Overflow("Overflow on add")
+                self.outputValues[self.outputName] = result
+                print("overflow fuck up")
+                print(result)
+                # raise Overflow("Overflow on add")
             else:
                 self.outputValues[self.outputName] = result
 
         elif controlSignal == 3:
-            print("addu")
+            print("addiu")
             result = readData1 + muxDecision
             if result > 4294967295:
                 print("snipping")
@@ -82,7 +86,6 @@ class Alu(CPUElement):
             binStr = f'{temp:032b}'
             print(binStr)
             i = 0
-            bitHit = False
             while i < 32:
                 if binStr[i] == '1':
                     newStr += "0"
@@ -108,6 +111,7 @@ class Alu(CPUElement):
             self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(bin, 2))
         else:
             print("no valid control signal given")
+        print("alu output: ", self.outputValues[self.outputName])
         print("")
 
     def setControlSignals(self):

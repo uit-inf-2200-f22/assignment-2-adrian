@@ -10,8 +10,8 @@ from memory import Memory
 from common import fromSignedWordToUnsignedWord
 
 class DataMemory(Memory):
-    def __init__(self, filename, breakinmemoryfile):
-        Memory.__init__(self, filename, breakinmemoryfile)
+    def __init__(self, filename):
+        Memory.__init__(self, filename)
         # self.initializeMemory(filename, breakinmemoryfile)
         
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
@@ -40,10 +40,17 @@ class DataMemory(Memory):
         # print(f'address: {address}')
         print("IN DATAMEMORY")
         if memReadControl == 1 and memWriteControl == 0:
-            self.outputValues[self.outputName] = self.memory[address]
+            try:
+                self.outputValues[self.outputName] = self.memory[address]
+            except:
+                print("\n===============================")
+                print("unable to access memory address")
+                print("===============================\n")
 
         elif memWriteControl == 1 and memReadControl == 0:
+            print("==========================")
             print(f'writing {writeData} to {address}')
+            print("==========================")
             self.memory[address] = writeData
             print(f'now in memory: {self.memory[address]}')
         else:

@@ -27,11 +27,11 @@ class MIPSSimulator():
 
     '''
 
-    def __init__(self, memoryFile, breakinmemoryfile):
+    def __init__(self, memoryFile):
         self.nCycles = 0  # Used to hold number of clock cycles spent executing instructions
 
-        self.dataMemory = DataMemory(memoryFile, breakinmemoryfile)
-        self.instructionMemory = InstructionMemory(memoryFile, breakinmemoryfile)
+        self.dataMemory = DataMemory(memoryFile)
+        self.instructionMemory = InstructionMemory(memoryFile)
         self.registerFile = RegisterFile()
 
         # the self.startAddress function literally does not work, even tried modifying it myself
@@ -329,8 +329,9 @@ class MIPSSimulator():
         self.registerFile.readInput()
         self.registerFile.writeOutput()
         self.registerFile.printAll()
+        self.dataMemory.printAll()
         print(f'==========================================\n')
-        if self.nCycles > 10:
+        if self.nCycles > 380:
             raise Exception("10 cycles hit")
         # self.pc.readInput()
 

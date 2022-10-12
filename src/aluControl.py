@@ -29,8 +29,7 @@ class AluControl(CPUElement):
         signal = self.inputValues[self.inputName]        
         binStr = f'{signal:06b}'
         
-        # Only the 4 last bits in the func field are relevant
-        signalValue = int(binStr[2:6],2)
+        signalValue = int(binStr[0:6],2)
         # print("signalValue is: ", signalValue)
         # print("aluOP is: ", ctrlStr)
 
@@ -46,28 +45,28 @@ class AluControl(CPUElement):
         
         if ctrlStr == '010':
             # print("R-instruction detected...")
-            if signalValue == 0:
+            if signalValue == 32:
                 # print("output: add")
                 self.outputControlSignals[self.outputSignalName] = 2
-            if signalValue == 1:
+            if signalValue == 33:
                 # print("output: addu")
                 self.outputControlSignals[self.outputSignalName] = 3        # There does not seem to be any official aluOperation output matchin a addu, so 3 is arbitrarily chosen here, it seems...
-            if signalValue == 2:
+            if signalValue == 34:
                 # print("output: sub")
                 self.outputControlSignals[self.outputSignalName] = 6
-            if signalValue == 3:
-                # print("output: sub")
-                self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here, i think atleast...
-            if signalValue == 4:
+            if signalValue == 35:
+                # print("output: subu")
+                self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here, i think atleast... apparently addu and subu i removed from later mips implementation
+            if signalValue == 36:
                 # print("output: and")
                 self.outputControlSignals[self.outputSignalName] = 0
-            if signalValue == 5:
+            if signalValue == 37:
                 # print("output: or")
                 self.outputControlSignals[self.outputSignalName] = 1
-            if signalValue == 7:
+            if signalValue == 39:
                 # print("output: nor")
                 self.outputControlSignals[self.outputSignalName] = 5
-            if signalValue == 10:
+            if signalValue == 42:
                 # print("output: set on less than")
                 self.outputControlSignals[self.outputSignalName] = 7
             if signalValue == 13:
@@ -77,11 +76,11 @@ class AluControl(CPUElement):
 
         if ctrlStr == '011':
             # print("I-instruction detected...")
-            # print("output: shiftleft")
+            # print("output: lui")
             self.outputControlSignals[self.outputSignalName] = 8
         if ctrlStr == '100':
             # print("I-instruction detected...")
-            # print("output: addu")
+            # print("output: addiu")
             self.outputControlSignals[self.outputSignalName] = 3
 
 class TestAluControl(unittest.TestCase):

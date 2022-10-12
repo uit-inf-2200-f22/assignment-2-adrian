@@ -14,12 +14,12 @@ from testElement import TestElement
 import common
 
 class Memory(CPUElement):
-    def __init__(self, filename, breakinmemoryfile):
+    def __init__(self, filename):
     
         # Dictionary mapping memory addresses to data
         # Both key and value must be of type 'long'
         self.memory = {}
-        self.breakinmemoryfile = int(breakinmemoryfile,10)
+        self.breakinmemoryfile = 2
         
         self.initializeMemory(filename)
     

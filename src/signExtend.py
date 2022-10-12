@@ -57,7 +57,7 @@ class SignExtend(CPUElement):
                 self.outputValues[self.outputName] = result
                 # print(f'output: {result}\t str: {result:032b}')
             else:
-                result = fromUnsignedWordToSignedWord(int(newString, 2)) 
+                result = fromUnsignedWordToSignedWord(int(newString, 2))
                 self.outputValues[self.outputName] = result
                 # print(f'output: {result}\t str: {result:032b}')
         else:

@@ -11,7 +11,7 @@ class PcJump(CPUElement):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
 
         assert(len(inputSources) == 2),         'pcJump should have 2 inputs'
-        assert(len(outputValueNames) == 1),     'pcJump only has one output'
+        assert(len(outputValueNames) == 1),     'pcJump only has 1 output'
         assert(len(control) == 0),              'pcJump has no control signal inputs'
         assert(len(outputSignalNames) == 0),    'pcJump does not have any control signal outputs'
 

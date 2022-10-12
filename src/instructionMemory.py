@@ -9,8 +9,8 @@ from testElement import TestElement
 from memory import Memory
 from pc import PC
 class InstructionMemory(Memory):
-    def __init__(self, filename, breakinmemoryfile):
-        Memory.__init__(self, filename, breakinmemoryfile)
+    def __init__(self, filename):
+        Memory.__init__(self, filename)
     
     def connect(self, inputSources, outputValueNames, control, outputSignalNames):
         CPUElement.connect(self, inputSources, outputValueNames, control, outputSignalNames)
@@ -33,7 +33,10 @@ class InstructionMemory(Memory):
     
     def writeOutput(self):
         # print("Writing output for IM...")
-        instruction = f'{self.memory[self.inputValues[self.inputName]]:032b}'
+        try:
+            instruction = f'{self.memory[self.inputValues[self.inputName]]:032b}'
+        except IndexError:
+            print("Unable to access memory address")
         print("Address: ", self.inputValues[self.inputName])
         print(f'instruction: {instruction}\n')
 
