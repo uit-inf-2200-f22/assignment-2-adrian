@@ -134,7 +134,7 @@ class Control(CPUElement):
             self.outputControlSignals[self.bne] = 0
 
         if signalValue == 43:
-            # print("sw detected")
+            print("sw detected")
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 1
             self.outputControlSignals[self.memtoReg] = 0

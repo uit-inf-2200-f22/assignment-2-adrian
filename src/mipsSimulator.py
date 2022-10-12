@@ -331,7 +331,7 @@ class MIPSSimulator():
         self.registerFile.printAll()
         self.dataMemory.printAll()
         print(f'==========================================\n')
-        if self.nCycles > 380:
+        if self.nCycles > 15:
             raise Exception("10 cycles hit")
         # self.pc.readInput()
 

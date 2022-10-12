@@ -35,10 +35,7 @@ class Alu(CPUElement):
             result = readData1 + muxDecision
             print("adding", readData1, "and", muxDecision)
             if result > 2147483647:
-                self.outputValues[self.outputName] = result
-                print("overflow fuck up")
-                print(result)
-                # raise Overflow("Overflow on add")
+                raise Overflow("Overflow on add")
             else:
                 self.outputValues[self.outputName] = result
 

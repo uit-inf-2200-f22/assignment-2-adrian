@@ -1,0 +1,2 @@
+Something interesting to remark, while running fibonacci.mem, add is used to calculate the next number. The program should overflow on number 47. yet it allows for up to number 64 as the breaking point.
+
