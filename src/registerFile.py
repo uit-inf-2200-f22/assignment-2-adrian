@@ -43,7 +43,7 @@ class RegisterFile(CPUElement):
         '''
         Print the name and value in each register.
         '''
-
+        
         print()
         print("Register file")
         print("================")
