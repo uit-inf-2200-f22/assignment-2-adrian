@@ -31,25 +31,29 @@ class Alu(CPUElement):
         # print(f'readData2: {muxDecision}')
 
         if controlSignal == 2:
-            # print("add")
+            print("add")
             result = readData1 + muxDecision
             print("adding", readData1, "and", muxDecision)
             if result > 2147483647:
-                self.outputValues[self.outputName] = result
-                print("overflow fuck up")
-                print(result)
-                # raise Overflow("Overflow on add")
+                raise Overflow("Overflow on add")
             else:
                 self.outputValues[self.outputName] = result
 
         elif controlSignal == 3:
             print("addiu")
             result = readData1 + muxDecision
-            if result > 4294967295:
-                print("snipping")
+            if result > 2147483647:
+                print("overflow detected... snipping")
                 binStr = f'{result:033b}'
                 binSnip = int(binStr[1:33], 2)
-                self.outputValues[self.outputName] = binSnip
+                self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(binSnip)
+            elif result < -2147483648:
+                print("overflow detected... snipping")
+                print(readData1, " + ", muxDecision)
+                binres = f'{(readData1 + muxDecision):033b}'
+                print("result:", binres)
+                print("result:", fromUnsignedWordToSignedWord(readData1 + muxDecision))
+                print("expected: 2147483647")
             else:
                 self.outputValues[self.outputName] = result
 
@@ -62,7 +66,7 @@ class Alu(CPUElement):
                 self.outputValues[self.outputName] = result
 
         elif controlSignal == 4:
-            print("")
+            print("subu")
             result = readData1 - muxDecision
             if result < 0:
                 print("snipping")
@@ -128,6 +132,8 @@ class Alu(CPUElement):
         else:
             print(f'zero signal: 0')
             self.outputControlSignals[self.controlOutputName] = 0
+
+        
 
 class TestAlu(unittest.TestCase):
     def setUp(self):
@@ -325,4 +331,30 @@ class TestAlu(unittest.TestCase):
             print("TEST SUCCESS!")
         else:
             print("SUBU FAILED")
+        print("")
+
+        print("ADDIU...")
+        print("expected result: -2147483639")
+        self.testInput1.setOutputValue('readData1', -2147483648)
+        self.testInput2.setOutputValue('muxDecision', -1)
+        self.testInput1.setControlSignals('aluControl', 3)
+
+        self.alu.readInput()
+        self.alu.readControlSignals()
+        self.alu.writeOutput()
+        self.alu.setControlSignals()
+
+        self.testOutput.readInput()
+        self.testOutput.readControlSignals()
+        output = self.testOutput.inputValues['aluResult']
+        control = self.testOutput.controlSignals['zero']
+        print("output: ", output, "zero: ", control)
+        if output == 150:
+            print("TEST SUCCESS!")
+        else:
+            print("ADD FAILED!")
+
         print("==========================\n")
+
+if __name__ == '__main__':
+    unittest.main()

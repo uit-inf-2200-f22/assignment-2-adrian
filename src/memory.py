@@ -19,7 +19,10 @@ class Memory(CPUElement):
         # Dictionary mapping memory addresses to data
         # Both key and value must be of type 'long'
         self.memory = {}
-        self.breakinmemoryfile = 2
+
+        # defines which '<' part of the code is to be run, since the memfiles folder contains mem files with different 
+        # programs in one file, and the last one overwrites the previous in the dictionary.
+        self.breakinmemoryfile = 1
         
         self.initializeMemory(filename)
     
