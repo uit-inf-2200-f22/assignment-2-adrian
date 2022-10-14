@@ -49,6 +49,7 @@ class Alu(CPUElement):
             elif result < -2147483648:
                 # Overflow negative
                 print("overflowing...")
+                # If you add 1, then perform an XOR, you get the correct number on the opposite side
                 tmp = readData1 + muxDecision + 1
                 self.outputValues[self.outputName] = int(f'{tmp:032b}'[1:33], 2) ^ 0xffffffff
             else:
@@ -82,16 +83,17 @@ class Alu(CPUElement):
         
         # nor = negated or, in case of 
         elif controlSignal == 5:
-            temp = fromSignedWordToUnsignedWord(readData1) | fromSignedWordToUnsignedWord(muxDecision)
+            print("NOR!!!!")
             newStr = ""
-            binStr = f'{temp:032b}'
-            print(binStr)
+            binStr1 = f'{readData1:032b}'
+            binStr2 = f'{muxDecision:032b}'
+            print(f'{binStr1} vs {binStr2}')
             i = 0
             while i < 32:
-                if binStr[i] == '1':
-                    newStr += "0"
-                else:
+                if binStr1[i] == '0' and binStr2[i] == '0':
                     newStr += "1"
+                else:
+                    newStr += "0"
                 i += 1
             print(newStr)
             self.outputValues[self.outputName] = int(newStr,2)
@@ -183,9 +185,9 @@ class TestAlu(unittest.TestCase):
         control = self.testOutput.controlSignals['zero']
         print("output: ", output, "zero: ", control)
         if output == 150:
-            print("TEST SUCCESS!")
+            print("\tTEST SUCCESS!")
         else:
-            print("ADD FAILED!")
+            print("\tADD FAILED!")
         print("")
 
         print("SUB...")
@@ -205,9 +207,9 @@ class TestAlu(unittest.TestCase):
         control = self.testOutput.controlSignals['zero']
         print("output: ", output, "zero: ", control)
         if output == 0:
-            print("TEST SUCCESS!")
+            print("\tTEST SUCCESS!")
         else:
-            print("SUB FAILED")
+            print("\tSUB FAILED")
         print("")
 
         print("AND...")
@@ -225,9 +227,9 @@ class TestAlu(unittest.TestCase):
         output = self.testOutput.inputValues['aluResult']
         print("output: ", output)
         if output == 32:
-            print("TEST SUCCESS!")
+            print("\tTEST SUCCESS!")
         else:
-            print("AND FAILED")
+            print("\tAND FAILED")
         print("")
 
         print("OR...")
@@ -245,9 +247,9 @@ class TestAlu(unittest.TestCase):
         output = self.testOutput.inputValues['aluResult']
         print("output: ", output)
         if output == 118:
-            print("TEST SUCCESS!")
+            print("\tTEST SUCCESS!")
         else:
-            print("OR FAILED")
+            print("\tOR FAILED")
         print("")
 
         print("NOR...")
@@ -264,10 +266,10 @@ class TestAlu(unittest.TestCase):
         self.testOutput.readInput()
         output = self.testOutput.inputValues['aluResult']
         print("Result: ", output)
-        if output == 4:
-            print("TEST SUCCESS!")
+        if output == 2:
+            print("\tTEST SUCCESS!")
         else:
-            print("NOR FAILED")
+            print("\tNOR FAILED")
         print("")
 
         print("STL...")
@@ -285,9 +287,9 @@ class TestAlu(unittest.TestCase):
         output = self.testOutput.inputValues['aluResult']
         print("Result: ", output)
         if output == 0:
-            print("TEST SUCCESS!")
+            print("\tTEST SUCCESS!")
         else:
-            print("STL FAILED")
+            print("\tSTL FAILED")
         print("")
 
         print("ADDU...")
@@ -305,9 +307,9 @@ class TestAlu(unittest.TestCase):
         output = self.testOutput.inputValues['aluResult']
         print("Result: ", output)
         if output == 20101:
-            print("TEST SUCCESS!")
+            print("\tTEST SUCCESS!")
         else:
-            print("ADDU FAILED")
+            print("\tADDU FAILED")
         print("")
 
         print("SUBU...")
@@ -325,15 +327,15 @@ class TestAlu(unittest.TestCase):
         output = self.testOutput.inputValues['aluResult']
         print("Result: ", output)
         if output == 19899:
-            print("TEST SUCCESS!")
+            print("\tTEST SUCCESS!")
         else:
-            print("SUBU FAILED")
+            print("\tSUBU FAILED")
         print("")
 
-        print("ADDIU...")
-        print("expected result: 2147483647")
-        self.testInput1.setOutputValue('readData1', -2147483648)
-        self.testInput2.setOutputValue('muxDecision', -8)
+        print("ADDIU posofl...")
+        print("expected result: -2147483648")
+        self.testInput1.setOutputValue('readData1', 2147483647)
+        self.testInput2.setOutputValue('muxDecision', 1)
         self.testInput1.setControlSignals('aluControl', 3)
 
         self.alu.readInput()
@@ -346,11 +348,32 @@ class TestAlu(unittest.TestCase):
         output = self.testOutput.inputValues['aluResult']
         control = self.testOutput.controlSignals['zero']
         print("output: ", output, "zero: ", control)
-        if output == 150:
-            print("TEST SUCCESS!")
+        if output == -2147483648:
+            print("\tTEST SUCCESS!")
         else:
-            print("ADD FAILED!")
+            print("\tADD FAILED!")
+        print("")
 
+        print("ADDIU negofl...")
+        print("expected result: 2147483647")
+        self.testInput1.setOutputValue('readData1', -2147483648)
+        self.testInput2.setOutputValue('muxDecision', -1)
+        self.testInput1.setControlSignals('aluControl', 3)
+
+        self.alu.readInput()
+        self.alu.readControlSignals()
+        self.alu.writeOutput()
+        self.alu.setControlSignals()
+
+        self.testOutput.readInput()
+        self.testOutput.readControlSignals()
+        output = self.testOutput.inputValues['aluResult']
+        control = self.testOutput.controlSignals['zero']
+        print("output: ", output, "zero: ", control)
+        if output == 2147483647:
+            print("\tTEST SUCCESS!")
+        else:
+            print("\tADD FAILED!")
         print("==========================\n")
 
 if __name__ == '__main__':
