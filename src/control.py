@@ -41,7 +41,7 @@ class Control(CPUElement):
         # if the opcode is all zeros, aka has the value zero, R-format is detected
         '''R-FORMAT INSTRUCTIONS'''
         if signalValue == 0:
-            # print("r-format detected")
+            print("r-format detected")
             self.outputControlSignals[self.regDst] = 1
             self.outputControlSignals[self.ALUSrc] = 0
             self.outputControlSignals[self.memtoReg] = 0
@@ -55,7 +55,7 @@ class Control(CPUElement):
 
         '''I-FORMAT INSTRUCTIONS'''
         if signalValue == 15:
-            # print("lui detected")
+            print("lui detected")
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 1
             self.outputControlSignals[self.memtoReg] = 0
@@ -69,7 +69,7 @@ class Control(CPUElement):
 
         # addi and addiu are treated as the same
         if signalValue == 8:
-            # print("addi detected")
+            print("addi detected")
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 1
             self.outputControlSignals[self.memtoReg] = 0
@@ -82,7 +82,7 @@ class Control(CPUElement):
             self.outputControlSignals[self.bne] = 0
 
         if signalValue == 9:
-            # print("addiu detected")
+            print("addiu detected")
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 1
             self.outputControlSignals[self.memtoReg] = 0
@@ -95,7 +95,7 @@ class Control(CPUElement):
             self.outputControlSignals[self.bne] = 0
 
         if signalValue == 4:
-            # print("beq detected")
+            print("beq detected")
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 0
             self.outputControlSignals[self.memtoReg] = 0
@@ -108,7 +108,7 @@ class Control(CPUElement):
             self.outputControlSignals[self.bne] = 0
 
         if signalValue == 5:
-            # print("bne detected")
+            print("bne detected")
             self.outputControlSignals[self.regDst] = 1
             self.outputControlSignals[self.ALUSrc] = 0
             self.outputControlSignals[self.memtoReg] = 0
@@ -121,7 +121,7 @@ class Control(CPUElement):
             self.outputControlSignals[self.bne] = 1
 
         if signalValue == 35:
-            # print("lw detected")
+            print("lw detected")
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 1
             self.outputControlSignals[self.memtoReg] = 1
@@ -149,7 +149,7 @@ class Control(CPUElement):
 
         '''J-FORMAT INSTRUCTIONS'''
         if signalValue == 2:
-            # print("J detected")
+            print("J detected")
             self.outputControlSignals[self.regDst] = 0
             self.outputControlSignals[self.ALUSrc] = 0
             self.outputControlSignals[self.memtoReg] = 0
@@ -160,7 +160,7 @@ class Control(CPUElement):
             self.outputControlSignals[self.ALUOp] = 1
             self.outputControlSignals[self.jump] = 1
             self.outputControlSignals[self.bne] = 0
-        # print("")
+        print("")
 
 class TestControl(unittest.TestCase):
     def setUp(self):

@@ -2,7 +2,6 @@
 Code written for inf-2200, University of Tromso
 '''
 
-from tkinter import TRUE
 from pc import PC
 from add import Add
 from mux import Mux
@@ -318,7 +317,7 @@ class MIPSSimulator():
 
         self.nCycles += 1
 
-        stopping = True
+        stopping = False
         ncyclesstop = 3
 
         # The following is just a small sample implementation
