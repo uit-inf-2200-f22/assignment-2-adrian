@@ -83,7 +83,7 @@ class Alu(CPUElement):
         
         # nor = negated or, in case of 
         elif controlSignal == 5:
-            print("NOR!!!!")
+            print("nor")
             newStr = ""
             binStr1 = f'{readData1:032b}'
             binStr2 = f'{muxDecision:032b}'

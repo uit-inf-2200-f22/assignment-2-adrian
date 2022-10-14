@@ -318,7 +318,8 @@ class MIPSSimulator():
 
         self.nCycles += 1
 
-        stopping = False
+        stopping = True
+        ncyclesstop = 3
 
         # The following is just a small sample implementation
 
@@ -335,7 +336,6 @@ class MIPSSimulator():
         self.dataMemory.printAll()
         print(f'==========================================\n')
         if stopping:
-            ncyclesstop = 20
             if self.nCycles > ncyclesstop:
                 raise Exception(f'{ncyclesstop} cycles')
         # self.pc.readInput()
