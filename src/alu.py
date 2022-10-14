@@ -85,11 +85,22 @@ class Alu(CPUElement):
         elif controlSignal == 5:
             print("NOR!!!!")
             newStr = ""
-            binStr1 = f'{readData1:032b}'
-            binStr2 = f'{muxDecision:032b}'
+
+            len1 = len(bin(readData1))-2
+            len2 = len(bin(muxDecision))-2
+
+            if len1 > len2:
+                binStr1 = f'{readData1:0{len1}b}'
+                binStr2 = f'{muxDecision:0{len1}b}'
+                max = len1
+            else:
+                binStr1 = f'{readData1:0{len2}b}'
+                binStr2 = f'{muxDecision:0{len2}b}'
+                max = len2
+
             print(f'{binStr1} vs {binStr2}')
             i = 0
-            while i < 32:
+            while i < max:
                 if binStr1[i] == '0' and binStr2[i] == '0':
                     newStr += "1"
                 else:
@@ -109,9 +120,9 @@ class Alu(CPUElement):
             print("shifting left")
             print(f'binStr: {muxDecision:032b}')
             result = muxDecision << 16
-            bin = f'{result:048b}'[16:48]
-            print(f'after shift: {bin}\t{int(bin, 2)}')
-            self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(bin, 2))
+            binres = f'{result:048b}'[16:48]
+            print(f'after shift: {binres}\t{int(binres, 2)}')
+            self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(binres, 2))
         else:
             print("no valid control signal given")
         print("alu output: ", self.outputValues[self.outputName])
@@ -266,7 +277,7 @@ class TestAlu(unittest.TestCase):
         self.testOutput.readInput()
         output = self.testOutput.inputValues['aluResult']
         print("Result: ", output)
-        if output == 2:
+        if output == 4:
             print("\tTEST SUCCESS!")
         else:
             print("\tNOR FAILED")
