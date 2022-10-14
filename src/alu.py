@@ -58,6 +58,7 @@ class Alu(CPUElement):
         elif controlSignal == 6:
             print("sub")
             result = readData1 - muxDecision
+            print(f'subtracting {readData1} and {muxDecision}')
             if result < -2147483648:
                 raise Overflow("Overflow on sub")
             else:

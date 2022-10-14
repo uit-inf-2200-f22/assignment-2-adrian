@@ -41,7 +41,7 @@ class AluControl(CPUElement):
         elif ctrlStr == '001':
             print("beq detected")
             print("sub detected")
-            self.outputControlSignals[self.outputSignalName] = 6
+            self.outputControlSignals[self.outputSignalName] = 3
         
         if ctrlStr == '010':
             # print("R-instruction detected...")
