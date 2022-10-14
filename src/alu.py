@@ -83,9 +83,7 @@ class Alu(CPUElement):
         
         # nor = negated or, in case of 
         elif controlSignal == 5:
-            print("NOR!!!!")
             newStr = ""
-
             len1 = len(bin(readData1))-2
             len2 = len(bin(muxDecision))-2
 
