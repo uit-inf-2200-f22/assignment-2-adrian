@@ -25,7 +25,7 @@ class Alu(CPUElement):
     def writeOutput(self):
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]
-        # print("Writing output for ALU...")
+        print("Writing output for ALU...")
         controlSignal = self.controlSignals[self.controlInputName]
         # print(f'readData1: {readData1}')
         # print(f'readData2: {muxDecision}')
@@ -40,20 +40,17 @@ class Alu(CPUElement):
                 self.outputValues[self.outputName] = result
 
         elif controlSignal == 3:
-            print("addiu")
+            print("addiu/addu")
             result = readData1 + muxDecision
             if result > 2147483647:
-                print("overflow detected... snipping")
-                binStr = f'{result:033b}'
-                binSnip = int(binStr[1:33], 2)
-                self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(binSnip)
+                # Overflow positive
+                print("overflowing...")
+                self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(f'{result:033b}'[1:33], 2))
             elif result < -2147483648:
-                print("overflow detected... snipping")
-                print(readData1, " + ", muxDecision)
-                binres = f'{(readData1 + muxDecision):033b}'
-                print("result:", binres)
-                print("result:", fromUnsignedWordToSignedWord(readData1 + muxDecision))
-                print("expected: 2147483647")
+                # Overflow negative
+                print("overflowing...")
+                tmp = readData1 + muxDecision + 1
+                self.outputValues[self.outputName] = int(f'{tmp:032b}'[1:33], 2) ^ 0xffffffff
             else:
                 self.outputValues[self.outputName] = result
 
@@ -116,7 +113,7 @@ class Alu(CPUElement):
         else:
             print("no valid control signal given")
         print("alu output: ", self.outputValues[self.outputName])
-        print("")
+        print("Alu complete\n")
 
     def setControlSignals(self):
         print("Writing control output for ALU...")
@@ -334,9 +331,9 @@ class TestAlu(unittest.TestCase):
         print("")
 
         print("ADDIU...")
-        print("expected result: -2147483639")
+        print("expected result: 2147483647")
         self.testInput1.setOutputValue('readData1', -2147483648)
-        self.testInput2.setOutputValue('muxDecision', -1)
+        self.testInput2.setOutputValue('muxDecision', -8)
         self.testInput1.setControlSignals('aluControl', 3)
 
         self.alu.readInput()

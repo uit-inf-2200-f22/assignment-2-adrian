@@ -35,10 +35,12 @@ class InstructionMemory(Memory):
         # print("Writing output for IM...")
         try:
             instruction = f'{self.memory[self.inputValues[self.inputName]]:032b}'
+            hex = f'{self.memory[self.inputValues[self.inputName]]:08x}'
         except IndexError:
             print("Unable to access memory address")
         print("Address: ", self.inputValues[self.inputName])
-        print(f'instruction: {instruction}\n')
+        print(f'bin instruction: {instruction}')
+        print(f'hex instruction: {hex}\n')
 
         shiftLeftTwo = instruction[6:32]
         control = instruction[0:6]

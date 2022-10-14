@@ -2,6 +2,7 @@
 Code written for inf-2200, University of Tromso
 '''
 
+from tkinter import TRUE
 from pc import PC
 from add import Add
 from mux import Mux
@@ -162,7 +163,7 @@ class MIPSSimulator():
         self.signExtend.connect(
             [(self.instructionMemory, 'signExtend')],
             ['signExtendOutput'],
-            [(self.control, 'aluOp'), (self.control, 'branch')],
+            [(self.control, 'aluOp')],
             []
         )
 
@@ -317,6 +318,8 @@ class MIPSSimulator():
 
         self.nCycles += 1
 
+        stopping = False
+
         # The following is just a small sample implementation
 
         # self.pc.writeOutput()
@@ -331,8 +334,10 @@ class MIPSSimulator():
         self.registerFile.printAll()
         self.dataMemory.printAll()
         print(f'==========================================\n')
-        if self.nCycles > 15:
-            raise Exception("10 cycles hit")
+        if stopping:
+            ncyclesstop = 20
+            if self.nCycles > ncyclesstop:
+                raise Exception(f'{ncyclesstop} cycles')
         # self.pc.readInput()
 
         

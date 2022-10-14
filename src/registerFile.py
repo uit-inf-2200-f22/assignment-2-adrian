@@ -43,13 +43,15 @@ class RegisterFile(CPUElement):
         '''
         Print the name and value in each register.
         '''
-        
+    
+        # I added print for register index, such that which index is which number, is more clear. Mem files refer to them in numbers, so this simplifies it a bit.
+
         print()
         print("Register file")
         print("================")
         for i in range(0, 32):
-            print("%s \t=> %s (%s)" % (self.registerNames[i], common.fromUnsignedWordToSignedWord(
-                self.register[i]), hex(int(self.register[i]))[:-1]))
+            print("%s \t=> %s (%s) (%s)" % (self.registerNames[i], common.fromUnsignedWordToSignedWord(
+                self.register[i]), hex(int(self.register[i]))[:-1], i))
         print("================")
         print()
         print()

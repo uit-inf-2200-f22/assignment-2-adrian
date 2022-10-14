@@ -22,7 +22,8 @@ class Memory(CPUElement):
 
         # defines which '<' part of the code is to be run, since the memfiles folder contains mem files with different 
         # programs in one file, and the last one overwrites the previous in the dictionary.
-        self.breakinmemoryfile = 1
+        # A value of 0 deactivates this function completely, as it is probably is needed for the pytest or what not. 
+        self.breakinmemoryfile = 0
         
         self.initializeMemory(filename)
     
@@ -42,28 +43,30 @@ class Memory(CPUElement):
         print("initalizing memory...")
 
         # Loops through each line in the mem lists, adds every word, separated by a tab, into a new list
-        # which is then added to its respective list.
+        # which is then added to a dictionary.
         l = 0
         for line in mem:
             if line[0] == '#' or line[0] == '\n' or line[0] == '>':
                 if line[0] == '>' and l != self.breakinmemoryfile:
                     l += 1
-                elif l == self.breakinmemoryfile:
+                elif l == self.breakinmemoryfile and self.breakinmemoryfile != 0:
                     break
                 continue
             line = line.split("\t")
-            if len(line[0]) > 2 :
-                line[0] = line[0][0: 0:] + line[0][1 + 1::]
-            if len(line[1]) > 2 :
-                line[1] = line[1][0: 0:] + line[1][1 + 1::]
-            address.append(int(line[0], 16))
-            instruction.append(int(line[1], 16))
-
-        # Populating the self.memory dictionary
-        i = 0
-        while i < len(address):
-            self.memory[int(address[i])] = int(instruction[i])
-            i += 1
+            if l == self.breakinmemoryfile:    
+                # The following lines removes the 0x from the string, as it messes with certain low values
+                if len(line[0]) > 2 :
+                    line[0] = line[0][0: 0:] + line[0][1 + 1::]
+                if len(line[1]) > 2 :
+                    line[1] = line[1][0: 0:] + line[1][1 + 1::]
+                    
+                # Add adresses and instructions to the dictionary
+                addr = int(line[0], 16)
+                instr = int(line[1], 16)
+                print(f'{addr:08x} maps to {instr:08x}')
+                self.memory[addr] = instr
+            else:
+                continue
         
         keys = list(self.memory.keys())
         q = 0
@@ -72,7 +75,7 @@ class Memory(CPUElement):
             print(line, "\t", self.memory[keys[q]])
             q = q+1
 
-        print("initalizing memory done")
+        print("initalizing memory complete\n")
 
     def printAll(self):
         for key in sorted(self.memory.keys()):

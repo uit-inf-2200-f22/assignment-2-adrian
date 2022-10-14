@@ -35,52 +35,52 @@ class AluControl(CPUElement):
 
         if ctrlStr == '000':
             # print("I-instruction detected...")
-            # print("output: add")
+            print("add detected")
             self.outputControlSignals[self.outputSignalName] = 2
 
         elif ctrlStr == '001':
-            # # print("branch on equal operation detected...")
-            # # print("output: sub")
+            print("beq detected")
+            print("sub detected")
             self.outputControlSignals[self.outputSignalName] = 6
         
         if ctrlStr == '010':
             # print("R-instruction detected...")
             if signalValue == 32:
-                # print("output: add")
+                print("add detected")
                 self.outputControlSignals[self.outputSignalName] = 2
             if signalValue == 33:
-                # print("output: addu")
-                self.outputControlSignals[self.outputSignalName] = 3        # There does not seem to be any official aluOperation output matchin a addu, so 3 is arbitrarily chosen here, it seems...
+                print("addu detected")
+                self.outputControlSignals[self.outputSignalName] = 3        # Addu and Addiu use the same principles, only Addiu uses immediate field
             if signalValue == 34:
-                # print("output: sub")
+                print("sub detected")
                 self.outputControlSignals[self.outputSignalName] = 6
             if signalValue == 35:
-                # print("output: subu")
-                self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here, i think atleast... apparently addu and subu i removed from later mips implementation
+                print("subu detected")
+                self.outputControlSignals[self.outputSignalName] = 4        # There does not seem to be any official aluOperation output matchin a subu, so 4 is arbitrarily chosen here, i think atleast...
             if signalValue == 36:
-                # print("output: and")
+                print("and detected")
                 self.outputControlSignals[self.outputSignalName] = 0
             if signalValue == 37:
-                # print("output: or")
+                # print("or detected")
                 self.outputControlSignals[self.outputSignalName] = 1
             if signalValue == 39:
-                # print("output: nor")
+                print("nor detected")
                 self.outputControlSignals[self.outputSignalName] = 5
             if signalValue == 42:
-                # print("output: set on less than")
+                print("set on less than detected")
                 self.outputControlSignals[self.outputSignalName] = 7
             if signalValue == 13:
-                print("BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING BREAKING ")
-                raise Break("break instruction detected")
+                print("\n!---BREAKING---!\n")
+                raise Break("BREAK instruction detected")
         # print("output value set!\n")
 
         if ctrlStr == '011':
             # print("I-instruction detected...")
-            # print("output: lui")
+            print("lui detected")
             self.outputControlSignals[self.outputSignalName] = 8
         if ctrlStr == '100':
             # print("I-instruction detected...")
-            # print("output: addiu")
+            print("addiu detected")
             self.outputControlSignals[self.outputSignalName] = 3
 
 class TestAluControl(unittest.TestCase):
