@@ -120,7 +120,7 @@ class Alu(CPUElement):
             result = muxDecision << 16
             binres = f'{result:048b}'[16:48]
             print(f'after shift: {binres}\t{int(binres, 2)}')
-            self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(binres, 2))
+            self.outputValues[self.outputName] = int(binres, 2)
         else:
             print("no valid control signal given")
         print("alu output: ", self.outputValues[self.outputName])
