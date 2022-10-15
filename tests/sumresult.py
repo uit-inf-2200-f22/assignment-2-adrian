@@ -1,6 +1,6 @@
 
 import os
-import requests
+# import requests
 
 
 def sumresult():
