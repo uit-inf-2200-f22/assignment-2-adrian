@@ -36,6 +36,8 @@ class Alu(CPUElement):
             print("adding", readData1, "and", muxDecision)
             if result > 2147483647:
                 raise Overflow("Overflow on add")
+            elif result < -2147483648:
+                raise Overflow("Overflow on sub")
             else:
                 self.outputValues[self.outputName] = result
 
@@ -59,7 +61,9 @@ class Alu(CPUElement):
             print("sub")
             result = readData1 - muxDecision
             print(f'subtracting {readData1} and {muxDecision}')
-            if result < -2147483648:
+            if result > 2147483647:
+                raise Overflow("Overflow on sub")
+            elif result < -2147483648:
                 raise Overflow("Overflow on sub")
             else:
                 self.outputValues[self.outputName] = result
@@ -67,12 +71,15 @@ class Alu(CPUElement):
         elif controlSignal == 4:
             print("subu")
             result = readData1 - muxDecision
-            if result < 0:
-                print("snipping")
-                tmp = fromSignedWordToUnsignedWord(result)
-                binStr = f'{tmp:033b}'
-                binSnip = int(binStr[1:33], 2)
-                self.outputValues[self.outputName] = binSnip
+            if result > 2147483647:
+                print("overflowing...")
+                self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(f'{result:033b}'[1:33], 2))
+            elif result < -2147483648:
+                # Overflow negative
+                print("overflowing...")
+                # If you add 1, then perform an XOR, you get the correct number on the opposite side
+                tmp = readData1 + muxDecision + 1
+                self.outputValues[self.outputName] = int(f'{tmp:032b}'[1:33], 2) ^ 0xffffffff
             else:
                 self.outputValues[self.outputName] = result
 
@@ -82,32 +89,24 @@ class Alu(CPUElement):
         elif controlSignal == 1:
             self.outputValues[self.outputName] = readData1 | muxDecision
         
-        # nor = negated or, in case of 
+        # nor = negated or
         elif controlSignal == 5:
+
             print("nor")
             newStr = ""
-            len1 = len(bin(readData1))-2
-            len2 = len(bin(muxDecision))-2
-
-            if len1 > len2:
-                binStr1 = f'{readData1:0{len1}b}'
-                binStr2 = f'{muxDecision:0{len1}b}'
-                max = len1
-            else:
-                binStr1 = f'{readData1:0{len2}b}'
-                binStr2 = f'{muxDecision:0{len2}b}'
-                max = len2
-
+            binStr1 = f'{readData1:032b}'
+            binStr2 = f'{muxDecision:032b}'
             print(f'{binStr1} vs {binStr2}')
+
             i = 0
-            while i < max:
+            while i < 32:
                 if binStr1[i] == '0' and binStr2[i] == '0':
                     newStr += "1"
                 else:
                     newStr += "0"
                 i += 1
             print(newStr)
-            self.outputValues[self.outputName] = int(newStr,2)
+            self.outputValues[self.outputName] = fromSignedWordToUnsignedWord(int(newStr,2))
 
         elif controlSignal == 7:
             if readData1 < muxDecision:
@@ -135,12 +134,12 @@ class Alu(CPUElement):
         result = readData1 - muxDecision
         print(f'readData1: {readData1}')
         print(f'readData2: {muxDecision}')
-        print(f'readData1 - readData2: {result}\n')
+        print(f'readData1 - readData2: {result}')
         if result == 0:
-            print(f'zero signal: 1')
+            print(f'zero signal: 1\n')
             self.outputControlSignals[self.controlOutputName] = 1
         else:
-            print(f'zero signal: 0')
+            print(f'zero signal: 0\n')
             self.outputControlSignals[self.controlOutputName] = 0
 
         
@@ -265,8 +264,8 @@ class TestAlu(unittest.TestCase):
 
         print("NOR...")
         print("excpected results: 4")
-        self.testInput1.setOutputValue('readData1', 9)
-        self.testInput2.setOutputValue('muxDecision', 2)
+        self.testInput1.setOutputValue('readData1', 1)
+        self.testInput2.setOutputValue('muxDecision', 8)
         self.testInput1.setControlSignals('aluControl', 5)
 
         self.alu.readInput()

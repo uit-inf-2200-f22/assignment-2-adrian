@@ -52,31 +52,9 @@ class DataMemory(Memory):
             print(f'writing {writeData} to {address}')
             print("==========================")
             self.memory[address] = writeData
-            print(f'now in memory: {self.memory[address]}')
+            print(f'now in memory: {self.memory[address]}\n')
         else:
-            print("doing nothing...")
-
-        # print("memory:")
-        # print(self.memory)
-
-        # print("")
-
-    # def initializeMemory(self, filename, breakinmemoryfile):
-
-    #     mem = open(filename, 'r').readlines()
-
-    #     addresses = []
-    #     instruction = []
-    #     print("initializing DATAMEMORY")
-    #     l = 0
-    #     for line in mem:
-    #         # print(line)
-    #         if line[0] == '#' or line[0] == '\n' or line[0] == '>':
-    #             if len(line) > 1:
-    #                 if line[1] == '#' and line[18] == 'D':
-    #                     print("\ndatamemory found\n")
-
-    #     print("initializing DATAMEMORY done")
+            print("doing nothing...\n")
 
 class TestDataMemory(unittest.TestCase):
     def setUp(self, memoryFile):

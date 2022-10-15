@@ -9,7 +9,7 @@ def runSimulator(sim):
     # Replace this with your own main loop!
     while (1):
         sim.tick()
-        print(sim.pc.currentAddress())
+        # print(f'Address {sim.pc.currentAddress()}')
 
 if __name__ == '__main__':
     assert(len(sys.argv) == 2), 'Usage: python %s memoryFile' % (sys.argv[0])

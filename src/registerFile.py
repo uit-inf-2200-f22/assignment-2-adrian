@@ -33,7 +33,7 @@ class RegisterFile(CPUElement):
         self.rs = inputSources[0][1]
         self.rt = inputSources[1][1]
         self.inputMuxIM = inputSources[2][1]
-        self.inputMuxDM = inputSources[3][1] # Unsure how to do this excactly, the register file technically has to run twice now since the write data happens at the end of the path
+        self.inputMuxDM = inputSources[3][1] 
 
         self.controlName = control[0][1]
         self.readData1 = outputValueNames[0]
@@ -62,6 +62,8 @@ class RegisterFile(CPUElement):
 
         rr1 = self.inputValues[self.rs]
         rr2 = self.inputValues[self.rt]
+
+        print(f'accessing register {rr1} and {rr2} which contains {self.register[rr1]} and {self.register[rr2]}')
 
         wr = self.inputValues[self.inputMuxIM]
 

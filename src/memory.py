@@ -23,7 +23,7 @@ class Memory(CPUElement):
         # defines which '<' part of the code is to be run, since the memfiles folder contains mem files with different 
         # programs in one file, and the last one overwrites the previous in the dictionary.
         # A value of 0 deactivates this function completely, as it is probably is needed for the pytest or what not. 
-        self.breakinmemoryfile = 0
+        self.breakinmemoryfile = 4
         
         self.initializeMemory(filename)
     
@@ -78,8 +78,10 @@ class Memory(CPUElement):
         print("initalizing memory complete\n")
 
     def printAll(self):
+        print(f'Memory\n-----')
         for key in sorted(self.memory.keys()):
             print("%s\t=> %s\t(%s)" % (hex(int(key)), common.fromUnsignedWordToSignedWord(self.memory[key]), hex(int(self.memory[key]))))
+        print(f'-----')
 
 class TestMemory(unittest.TestCase):
     def setUp(self, file):
