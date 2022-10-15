@@ -49,9 +49,9 @@ class SignExtend(CPUElement):
         if not unsigned:
             # !!    UPDATE 2022 FALL, I now know the branch does not shift 16, as in LUI, therefore we now longer require the branch control signal. Don't know why i thought this.   !!
             # Since the outgoing value, in case of negative sign bit, is a negative integer, 
-            # the resulting lui shiftleft and branch addition might turn out wrong, there for, 
+            # the resulting lui shiftleft and branch addition might turn out wrong, therefor, 
             # we check for that, and send out the pure, two's complement representation of the 
-            # number, in positive a positive integer form. This is a python problem.
+            # number, in positive a positive integer form. This is a python problem when converting to INT.
             if controlOne == 3:
                 result = int(newString, 2)
                 self.outputValues[self.outputName] = result
