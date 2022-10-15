@@ -336,7 +336,7 @@ class MIPSSimulator():
         print(f'==========================================\n')
         if stopping:
             if self.nCycles > ncyclesstop:
-                raise Exception(f'{ncyclesstop} cycles')
+                raise Exception(f'{ncyclesstop} cycleas reached')
         # self.pc.readInput()
 
         
