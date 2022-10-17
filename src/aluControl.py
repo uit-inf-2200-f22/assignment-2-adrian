@@ -23,6 +23,7 @@ class AluControl(CPUElement):
         self.outputValues['none'] = 0
 
     def setControlSignals(self): 
+        print("------AluControl------")
         controlSignal = self.controlSignals[self.controlName]
         ctrlStr = f'{controlSignal:03b}'
         # print("Writing control output for aluControl...")

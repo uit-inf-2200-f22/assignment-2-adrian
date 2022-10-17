@@ -149,7 +149,7 @@ class MIPSSimulator():
             ['muxOut'],
             [(self.control, 'regDst')],
             [],
-            'register destination Mux'
+            'Register Destination Mux'
         )
 
         self.registerFile.connect(
@@ -171,7 +171,7 @@ class MIPSSimulator():
             ['aluMuxOutput'],
             [(self.control, 'aluSrc')],
             [],
-            'aluSrc Mux'
+            'Alu Source Mux'
         )
 
         self.aluControl.connect(
@@ -200,7 +200,7 @@ class MIPSSimulator():
             ['regWrite'],
             [(self.control, 'memtoReg')],
             [],
-            'data memory Mux'
+            'Data Memory Mux'
         )
 
         self.shiftLeftTwo.connect(
@@ -215,7 +215,7 @@ class MIPSSimulator():
             ['branchAdd'],
             [],
             [],
-            'branch destination adder'
+            'Branch Destination adder'
         )
 
         self.pcIncOrBranchMux.connect(
@@ -223,7 +223,7 @@ class MIPSSimulator():
             ['pcBranchOutput'],
             [(self.andGate, 'branch')],
             [],
-            'pcIncOrBranchMux'
+            'Pc Increment Or Branch Mux'
         )
         
         self.jmpOrBranchMux.connect(
@@ -231,7 +231,7 @@ class MIPSSimulator():
             ['nextAddress'],
             [(self.control, 'jump')],
             [],
-            'jmpOrBranchMux'
+            'Jumpp Or Branch Mux'
         )
 
         self.bne.connect(
@@ -274,7 +274,7 @@ class MIPSSimulator():
             ['pcIncrement'],
             [],
             [],
-            'pc increment output'
+            'Pc Increment Output'
         )
 
 
@@ -318,7 +318,7 @@ class MIPSSimulator():
         self.nCycles += 1
 
         stopping = False
-        ncyclesstop = 3
+        ncyclesstop = 16
 
         # The following is just a small sample implementation
 

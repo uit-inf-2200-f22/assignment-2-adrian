@@ -35,7 +35,10 @@ class Control(CPUElement):
 
     def setControlSignals(self):
 
+        print("------Control------")
+
         signalValue = self.inputValues[self.inputName]
+        print(f'Opcode: {signalValue}')
         # print("Writing control output for control unit...")
         # print("input signal value: ", signalValue)
         # if the opcode is all zeros, aka has the value zero, R-format is detected

@@ -25,7 +25,7 @@ class Alu(CPUElement):
     def writeOutput(self):
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]
-        print("Writing output for ALU...")
+        print("------ALU------")
         controlSignal = self.controlSignals[self.controlInputName]
         # print(f'readData1: {readData1}')
         # print(f'readData2: {muxDecision}')
@@ -67,7 +67,7 @@ class Alu(CPUElement):
                 raise Overflow("Overflow on sub")
             else:
                 self.outputValues[self.outputName] = result
-
+        
         elif controlSignal == 4:
             print("subu")
             result = readData1 - muxDecision
@@ -128,7 +128,7 @@ class Alu(CPUElement):
         print("Alu complete\n")
 
     def setControlSignals(self):
-        print("Writing control output for ALU...")
+        print("------ALU control output------")
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]
         result = readData1 - muxDecision

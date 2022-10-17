@@ -20,6 +20,7 @@ class Add(CPUElement):
         self.name = name
   
     def writeOutput(self):
+        print(f'------{self.name}------'    )
         total_sum = 0
         for k in self.inputValues:
             assert(isinstance(self.inputValues[k], int) or isinstance(self.inputValues[k], int))

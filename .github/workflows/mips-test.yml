@@ -34,7 +34,7 @@ jobs:
         path: MIPS_tests.log
     - name: Sum test result
       run: |
-        python3 tests/sumresult.py
+        python3 tests/sumtest.py
     - name: upload score
       uses: actions/upload-artifact@v2
       with:

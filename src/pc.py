@@ -25,14 +25,14 @@ class PC(CPUElement):
         self.q = 0
 
     def writeOutput (self):
-        print("Writing output for PC...")
+        print("------PC------")
         if self.q == 0:
             self.outputValues[self.outputField_pcAddress] = self.baseaddr
-            print(f'outputting address: {self.outputValues[self.outputField_pcAddress]}')
+            print(f'outputting address: {self.outputValues[self.outputField_pcAddress]:08x}')
             self.q += 1
             return
         self.outputValues[self.outputField_pcAddress] = self.inputValues[self.inputField_newPcAddress]
-        print("outputting address: ", self.outputValues[self.outputField_pcAddress])
+        print(f'outputting address: {self.outputValues[self.outputField_pcAddress]:08x}')
         print("")
 
     def currentAddress (self):

@@ -23,7 +23,7 @@ class Memory(CPUElement):
         # defines which '<' part of the code is to be run, since the memfiles folder contains mem files with different 
         # programs in one file, and the last one overwrites the previous in the dictionary.
         # A value of 0 deactivates this function completely, as it is probably is needed for the pytest or what not. 
-        self.breakinmemoryfile = 4
+        self.breakinmemoryfile = 0
         
         self.initializeMemory(filename)
     

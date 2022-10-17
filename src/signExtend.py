@@ -22,13 +22,14 @@ class SignExtend(CPUElement):
 
 
     def writeOutput(self):
+        print("------SignExtend------")
+
         signal = self.inputValues[self.inputName]
         controlOne = self.controlSignals[self.lui]
-
+        
         # binStr now contains a string of binary code, that should e extended, reads the first bit and calculates accordingly
         # the binStrings are indexed from the top, meaning binStr[0] is the 16th bit.
         binStr = f'{signal:016b}'
-        print("Writing output for signExtend...")
         print("input binary string", binStr)
         i = 0
         newString = ""                                  # Since adding characters at the start of a string in python
@@ -55,12 +56,10 @@ class SignExtend(CPUElement):
             if controlOne == 3:
                 result = int(newString, 2)
                 self.outputValues[self.outputName] = result
-                print("potato")
                 print(f'output: \n int:{result} \nstr: {result:032b}')
             else:
                 result = fromUnsignedWordToSignedWord(int(newString, 2))
                 self.outputValues[self.outputName] = result
-                print("tomato")
                 print(f'output: \nint: {result} \nstr: {result:032b}')
         else:
             result = int(newString, 2)

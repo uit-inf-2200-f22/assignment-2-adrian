@@ -30,7 +30,7 @@ class DataMemory(Memory):
         self.writeData = inputSources[1][1]
         
     def writeOutput(self):
-        # print("Writing output for dataMemory...")
+        print("------dataMemory------")
         memReadControl = self.controlSignals[self.memRead]
         memWriteControl = self.controlSignals[self.memWrite]
         writeData = self.inputValues[self.writeData]
@@ -38,7 +38,6 @@ class DataMemory(Memory):
         # print(f'control signals: {memReadControl} & {memWriteControl}')
         # print(f'writeData: {writeData}')
         # print(f'address: {address}')
-        print("IN DATAMEMORY")
         if memReadControl == 1 and memWriteControl == 0:
             try:
                 self.outputValues[self.outputName] = self.memory[address]
