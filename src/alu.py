@@ -23,27 +23,72 @@ class Alu(CPUElement):
         self.controlOutputName = outputSignalNames[0]
     
     def writeOutput(self):
-        readData1 = self.inputValues[self.inputNameOne]
-        muxDecision = self.inputValues[self.inputNameTwo]
-        print("------ALU------")
-        controlSignal = self.controlSignals[self.controlInputName]
-        # print(f'readData1: {readData1}')
-        # print(f'readData2: {muxDecision}')
+        # Masked incase any inputs are above 2^31-1 or below -2^31
+        readData1 = fromUnsignedWordToSignedWord(self.inputValues[self.inputNameOne])
+        muxDecision = fromUnsignedWordToSignedWord(self.inputValues[self.inputNameTwo])
 
-        if controlSignal == 2:
+        #Separate variables for bitwise operations, as the masking messes with the bits, in case the number is negative, produce 2's complement version
+        if readData1 < 0:
+            bitwiseReadData1 = fromSignedWordToUnsignedWord(self.inputValues[self.inputNameOne])
+        else:
+            bitwiseReadData1 = self.inputValues[self.inputNameOne]
+
+        if muxDecision < 0:
+            bitwiseMuxDecision = fromSignedWordToUnsignedWord(self.inputValues[self.inputNameTwo])
+        else:
+            bitwiseMuxDecision = self.inputValues[self.inputNameTwo]
+            
+        print("------ALU------")
+        print(f'input data {readData1} and {muxDecision}')
+        controlSignal = self.controlSignals[self.controlInputName]
+        print(f'control {controlSignal}')
+
+        # AND
+        if controlSignal == 0:
+            print("AND")
+            self.outputValues[self.outputName] = bitwiseReadData1 & bitwiseMuxDecision
+        
+        # OR
+        elif controlSignal == 1:
+            print("OR")
+            self.outputValues[self.outputName] = bitwiseReadData1 | bitwiseMuxDecision
+
+        # Add
+        elif controlSignal == 2:
             print("add")
             result = readData1 + muxDecision
             print("adding", readData1, "and", muxDecision)
+
             if result > 2147483647:
                 raise Overflow("Overflow on add")
             elif result < -2147483648:
-                raise Overflow("Overflow on sub")
+                raise Overflow("Overflow on add")
             else:
                 self.outputValues[self.outputName] = result
 
+        # Addiu/ADD
         elif controlSignal == 3:
             print("addiu/addu")
             result = readData1 + muxDecision
+
+            if result > 2147483647:
+                # Overflow positive
+                print("overflowing...")
+                self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(f'{result:033b}'[1:33], 2))
+            elif result < -2147483648:
+                # Overflow negative
+                print("overflowing neg...")
+                # If you add 1, then perform an XOR, you get the correct number on the opposite side
+                tmp = readData1 + muxDecision + 1
+                self.outputValues[self.outputName] = int(f'{tmp:032b}'[1:33], 2) ^ 0xffffffff
+            else:
+                self.outputValues[self.outputName] = result
+
+        # Subu
+        elif controlSignal == 4:
+
+            print("subu")
+            result = readData1 - muxDecision
             if result > 2147483647:
                 # Overflow positive
                 print("overflowing...")
@@ -57,45 +102,12 @@ class Alu(CPUElement):
             else:
                 self.outputValues[self.outputName] = result
 
-        elif controlSignal == 6:
-            print("sub")
-            result = readData1 - muxDecision
-            print(f'subtracting {readData1} and {muxDecision}')
-            if result > 2147483647:
-                raise Overflow("Overflow on sub")
-            elif result < -2147483648:
-                raise Overflow("Overflow on sub")
-            else:
-                self.outputValues[self.outputName] = result
-        
-        elif controlSignal == 4:
-            print("subu")
-            result = readData1 - muxDecision
-            if result > 2147483647:
-                print("overflowing...")
-                self.outputValues[self.outputName] = fromUnsignedWordToSignedWord(int(f'{result:033b}'[1:33], 2))
-            elif result < -2147483648:
-                # Overflow negative
-                print("overflowing...")
-                # If you add 1, then perform an XOR, you get the correct number on the opposite side
-                tmp = readData1 + muxDecision + 1
-                self.outputValues[self.outputName] = int(f'{tmp:032b}'[1:33], 2) ^ 0xffffffff
-            else:
-                self.outputValues[self.outputName] = result
-
-        elif controlSignal == 0:
-            self.outputValues[self.outputName] = readData1 & muxDecision
-            
-        elif controlSignal == 1:
-            self.outputValues[self.outputName] = readData1 | muxDecision
-        
-        # nor = negated or
+        # NOR
         elif controlSignal == 5:
-
             print("nor")
             newStr = ""
-            binStr1 = f'{readData1:032b}'
-            binStr2 = f'{muxDecision:032b}'
+            binStr1 = f'{bitwiseReadData1:032b}'
+            binStr2 = f'{bitwiseMuxDecision:032b}'
             print(f'{binStr1} vs {binStr2}')
 
             i = 0
@@ -108,26 +120,44 @@ class Alu(CPUElement):
             print(newStr)
             self.outputValues[self.outputName] = fromSignedWordToUnsignedWord(int(newStr,2))
 
+        # Sub
+        elif controlSignal == 6:
+            print("sub")
+            result = readData1 - muxDecision
+            print(f'subtracting {readData1} and {muxDecision}')
+            if result > 2147483647:
+                raise Overflow("Overflow on sub")
+            elif result < -2147483648:
+                raise Overflow("Overflow on sub")
+            else:
+                self.outputValues[self.outputName] = result
+        
+        # STL
         elif controlSignal == 7:
+            print("set less than")
             if readData1 < muxDecision:
                 self.outputValues[self.outputName] = 1
             else:
                 self.outputValues[self.outputName] = 0
-                
-        # Here, in order to left shift 16 times, and be left with a 32 bit number, we neet to split it
+
+        # Lui      
         elif controlSignal == 8:
-            print("shifting left")
-            print(f'binStr: {muxDecision:032b}')
-            result = muxDecision << 16
+        # Here, in order to left shift 16 times, and be left with a 32 bit number, we neet to split it
+            print("Lui")
+            print(f'binStr: {bitwiseMuxDecision:032b}')
+            result = bitwiseMuxDecision << 16
             binres = f'{result:048b}'[16:48]
             print(f'after shift: {binres}\t{int(binres, 2)}')
             self.outputValues[self.outputName] = int(binres, 2)
+
         else:
             print("no valid control signal given")
+
         print("alu output: ", self.outputValues[self.outputName])
-        print("Alu complete\n")
+        print("")
 
     def setControlSignals(self):
+        #This part sets a control signal for every time it runs. Wont matter unless we actually want to branch
         print("------ALU control output------")
         readData1 = self.inputValues[self.inputNameOne]
         muxDecision = self.inputValues[self.inputNameTwo]

@@ -34,6 +34,7 @@ class AluControl(CPUElement):
         # print("signalValue is: ", signalValue)
         # print("aluOP is: ", ctrlStr)
 
+        # My method of checking control signal here deviates from my normal routine.
         if ctrlStr == '000':
             # print("I-instruction detected...")
             print("add detected")
@@ -83,6 +84,8 @@ class AluControl(CPUElement):
             # print("I-instruction detected...")
             print("addiu detected")
             self.outputControlSignals[self.outputSignalName] = 3
+        
+        print("")
 
 class TestAluControl(unittest.TestCase):
     def setUp(self):

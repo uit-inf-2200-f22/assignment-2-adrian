@@ -21,14 +21,16 @@ class And(CPUElement):
     def writeOutput(self):
         self.outputValues['none'] = 0
 
-    def setControlSignals(self):     
+    def setControlSignals(self):
+        print("------AndGate------")
         control = self.controlSignals[self.controlInput] 
         zero = self.controlSignals[self.zeroControl]
         # print("Writing control output for andGate...")
         print(f'zero signal input {zero}')
         print(f'control signal: {control}')
         if control == 1 and zero == 1:
-            print("AND GATE output: 1\nBRANCHING")
+            print("AND GATE output: 1")
+            print("BRANCHING\n")
             self.outputControlSignals[self.signalName] = 1
         else:
             print("AND GATE output: 0\n")

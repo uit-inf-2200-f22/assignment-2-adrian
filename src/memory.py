@@ -37,9 +37,6 @@ class Memory(CPUElement):
         # Mem is now a list with each line being an element in the list
         mem = open(filename, "r").readlines()
 
-        address = []
-        instruction = []
-
         print("initalizing memory...")
 
         # Loops through each line in the mem lists, adds every word, separated by a tab, into a new list

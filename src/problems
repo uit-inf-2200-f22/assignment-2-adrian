@@ -1,9 +1,7 @@
-FAILED tests/test_mips.py::TestMips::test_trap[sub.mem] - Failed: Excepted <class 'common.Overflow'> caught BREAK instruction detected
 FAILED tests/test_mips.py::TestMips::test_val[add.mem] - Failed: > Test_addi_0x7fff+1 11 2147483647 trap ran as singleCycle?
 FAILED tests/test_mips.py::TestMips::test_val[beq.mem] - Failed: > Test_beq_nop 9 1 !trap ran as singleCycle?
 FAILED tests/test_mips.py::TestMips::test_val[bne.mem] - Failed: > Test_bne_nop 9 1 !trap ran as singleCycle?
 FAILED tests/test_mips.py::TestMips::test_val[break.mem] - Failed: > Test_break_after_add 9 1 !trap ran as singleCycle?
 FAILED tests/test_mips.py::TestMips::test_val[jump.mem] - Failed: > Test_jump_no_add 10 0 !trap ran as singleCycle?
 FAILED tests/test_mips.py::TestMips::test_val[lw.mem] - Failed: > Test_lw 12 42 !trap ran as singleCycle?
-FAILED tests/test_mips.py::TestMips::test_val[nor.mem] - Failed: Register $t3 value: 6 expected: -10
-FAILED tests/test_mips.py::TestMips::test_val[sub.mem] - Failed: Register $t3 value: 2147483647 expected: 0
+FAILED tests/test_mips.py::TestMips::test_val[sub.mem] - Failed: > Test_sub_ovf 10 2147418112 trap ran as singleCycle?

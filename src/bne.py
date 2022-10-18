@@ -23,6 +23,7 @@ class BNE(CPUElement):
         self.outputValues['none'] = 0
 
     def setControlSignals(self):
+        print("------BNE------")
         ctrlSignal = self.controlSignals[self.controlSignal]
         zeroSignal = self.controlSignals[self.zeroSignal]
         # print("Writing control output for bne sign inverter...")

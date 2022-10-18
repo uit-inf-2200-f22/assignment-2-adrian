@@ -51,8 +51,6 @@ class InstructionMemory(Memory):
         signExtend = instruction[16:32]
         aluControl = instruction[26:32]
 
-        print(f'{control} vs {shiftLeftTwo} vs {rs} vs {rt} vs {muxZero} vs {muxOne} vs {signExtend} vs {aluControl}')
-
         self.outputValues[self.shiftLeftTwo] = int(shiftLeftTwo,2)
         self.outputValues[self.control] = int(control,2)
         self.outputValues[self.rs] = int(rs,2)

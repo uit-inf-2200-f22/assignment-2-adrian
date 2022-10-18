@@ -317,8 +317,8 @@ class MIPSSimulator():
 
         self.nCycles += 1
 
-        stopping = False
-        ncyclesstop = 16
+        stopping = True
+        ncyclesstop = 3
 
         # The following is just a small sample implementation
 
